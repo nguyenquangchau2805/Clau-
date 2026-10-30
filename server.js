@@ -1,4 +1,5 @@
 import express from "express";
+import { exec } from "node:child_process";
 import multer from "multer";
 import crypto from "node:crypto";
 import path from "node:path";
@@ -9,6 +10,11 @@ import { questions, tests, results } from "./src/store.js";
 import { normalizeQuestion, parseJson, parseStructuredText, publicQuestion } from "./src/questions.js";
 import { buildTest, scoreTest, checkAnswer, FORMAT, BREAK_MINUTES } from "./src/testBuilder.js";
 import { aiEnabled, extractFromPdf, extractFromText, generateSimilar, tutorStream, verifyQuestion, mapLimit } from "./src/ai.js";
+
+// Tự đọc API key từ file .env (nếu có) để không phải gõ lệnh mỗi lần chạy.
+try {
+  process.loadEnvFile?.(".env");
+} catch {}
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 32 * 1024 * 1024, files: 20 } });
@@ -334,4 +340,10 @@ const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => {
   console.log(`SAT Practice đang chạy tại http://localhost:${PORT}`);
   if (!aiEnabled()) console.log("⚠️  Chưa có ANTHROPIC_API_KEY: các tính năng AI sẽ tắt.");
+  console.log("Đóng cửa sổ này (hoặc bấm Ctrl + C) để tắt web.");
+  if (process.env.OPEN_BROWSER) {
+    const url = `http://localhost:${PORT}`;
+    const cmd = process.platform === "win32" ? `start "" "${url}"` : process.platform === "darwin" ? `open "${url}"` : `xdg-open "${url}"`;
+    exec(cmd, () => {});
+  }
 });

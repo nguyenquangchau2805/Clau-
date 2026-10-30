@@ -42,13 +42,18 @@ Web luyện đề SAT với giao diện mô phỏng ứng dụng **Bluebook**. B
 
 ## Cài đặt & chạy
 
-Yêu cầu Node.js 18 trở lên.
+**Cách nhanh nhất (bấm đúp):**
+1. Cài [Node.js](https://nodejs.org) bản LTS (chỉ làm 1 lần).
+2. Bấm đúp file **`Chay-web-Windows.bat`** (Windows) hoặc **`Chay-web-Mac.command`** (Mac). Lần đầu file sẽ tự cài thư viện, sau đó tự mở trình duyệt vào web.
+   - Trên Mac, nếu máy báo "không mở được vì từ nhà phát triển không xác định", hãy chuột phải vào file → **Open** → **Open**. Chỉ phải làm vậy lần đầu.
+3. Đóng cửa sổ đen là web tắt.
 
+**Bật AI (không bắt buộc):** đổi tên file `.env.example` thành `.env`, rồi điền key vào dòng `ANTHROPIC_API_KEY=`. Web tự đọc key này mỗi lần chạy.
+
+**Chạy bằng lệnh (cách cũ):**
 ```bash
 npm install
-cp .env.example .env               # điền ANTHROPIC_API_KEY để bật AI (không bắt buộc)
-export ANTHROPIC_API_KEY=sk-ant-...  # hoặc đặt biến môi trường theo cách bạn quen
-npm start                          # mở http://localhost:3000
+npm start                   # mở http://localhost:3000
 ```
 
 Mới chạy lần đầu, vào **Ngân hàng đề → Nạp bộ câu mẫu** (55 câu) để thử ngay. Nếu không có API key, web vẫn chạy đầy đủ, chỉ tắt các tính năng AI.
