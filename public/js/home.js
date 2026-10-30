@@ -89,8 +89,18 @@ function pickFiles(files) {
 }
 
 async function pollJob(jobId, msg) {
+  let fails = 0;
   for (;;) {
-    const job = await api(`/api/jobs/${jobId}`);
+    let job;
+    try {
+      job = await api(`/api/jobs/${jobId}`);
+      fails = 0;
+    } catch (err) {
+      // Server bận (đang đọc PDF lớn) có thể trả lời chậm: thử lại vài lần trước khi báo lỗi.
+      if (++fails >= 5) throw err;
+      await new Promise((r) => setTimeout(r, 2000));
+      continue;
+    }
     const v = job.verify;
     msg.innerHTML =
       `<div class="notice ${job.status === "done" ? (job.errors.length && !job.found && !v ? "err" : "ok") : ""}">${esc(job.message)}</div>` +
@@ -102,6 +112,11 @@ async function pollJob(jobId, msg) {
 }
 
 async function uploadFiles(files, { useAI = $("#upAi").checked } = {}) {
+  const big = files.find((f) => f.size > 100 * 1024 * 1024);
+  if (big) {
+    $("#uploadMsg").innerHTML = `<div class="notice err">File "${esc(big.name)}" nặng hơn 100MB, quá lớn. Hãy nén PDF hoặc tách thành nhiều file nhỏ.</div>`;
+    return;
+  }
   const fd = new FormData();
   files.forEach((f) => fd.append("files", f, f.name));
   fd.append("useAI", String(useAI));

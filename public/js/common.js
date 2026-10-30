@@ -5,7 +5,14 @@ export async function api(url, opts = {}) {
     init.headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
     init.body = JSON.stringify(opts.body);
   }
-  const res = await fetch(url, init);
+  let res;
+  try {
+    res = await fetch(url, init);
+  } catch {
+    throw new Error(
+      "Không kết nối được tới server. Kiểm tra cửa sổ đen (Chay-web) còn mở không — nếu đã tắt thì bấm đúp file chạy lại, rồi tải lại trang (F5)."
+    );
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || `Lỗi ${res.status}`);
   return data;

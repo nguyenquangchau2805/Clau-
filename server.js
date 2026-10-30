@@ -17,7 +17,7 @@ try {
 } catch {}
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 32 * 1024 * 1024, files: 20 } });
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100 * 1024 * 1024, files: 20 } });
 app.use(express.json({ limit: "5mb" }));
 app.use(express.static(path.resolve("public")));
 // Thư viện hiển thị công thức / markdown phục vụ trực tiếp từ node_modules (không phụ thuộc CDN).
@@ -161,9 +161,16 @@ async function processFile(file, opts, job) {
 
   if (ext === ".pdf") {
     const parsed = await pdfParse(file.buffer).catch(() => ({ text: "", numpages: 0 }));
-    if (opts.useAI && aiEnabled()) return fromAi(await extractFromPdf(file.buffer, parsed.numpages, progress));
+    if (opts.useAI && aiEnabled()) {
+      if (file.buffer.length > 30 * 1024 * 1024) throw new Error(`${name}: PDF nặng hơn 30MB, AI không đọc được. Hãy nén PDF hoặc tách thành nhiều file.`);
+      return fromAi(await extractFromPdf(file.buffer, parsed.numpages, progress));
+    }
     const qs = parseStructuredText(parsed.text, defaults);
-    if (!qs.length) throw new Error(`${name}: không nhận ra câu hỏi. Bật AI để đọc PDF tự do.`);
+    if (!qs.length) {
+      throw new Error(
+        `${name}: không nhận ra câu hỏi vì file không viết theo định dạng mẫu. Cách miễn phí: bấm "📋 Sao chép prompt chuyển đề" ở khung bên phải và nhờ claude.ai chuyển đề; hoặc thêm API key rồi tick "Dùng AI đọc đề".`
+      );
+    }
     return qs;
   }
 
@@ -335,6 +342,20 @@ app.post("/api/ai/similar", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Lỗi upload (file quá lớn...) trả về thông báo dễ hiểu thay vì trang lỗi.
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    const msg = err.code === "LIMIT_FILE_SIZE" ? "File quá lớn (tối đa 100MB). Hãy nén hoặc tách file." : `Lỗi tải file: ${err.message}`;
+    return res.status(400).json({ error: msg });
+  }
+  console.error(err);
+  res.status(500).json({ error: err.message || "Lỗi server." });
+});
+
+// Một file hỏng không được làm sập cả web.
+process.on("uncaughtException", (err) => console.error("Lỗi không mong muốn:", err));
+process.on("unhandledRejection", (err) => console.error("Lỗi không mong muốn:", err));
 
 const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => {
