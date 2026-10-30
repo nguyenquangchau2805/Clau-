@@ -7,8 +7,8 @@ import pdfParse from "pdf-parse/lib/pdf-parse.js";
 
 import { questions, tests, results } from "./src/store.js";
 import { normalizeQuestion, parseJson, parseStructuredText, publicQuestion } from "./src/questions.js";
-import { buildTest, scoreTest, FORMAT, BREAK_MINUTES } from "./src/testBuilder.js";
-import { aiEnabled, extractFromPdf, extractFromText, generateSimilar, tutorStream } from "./src/ai.js";
+import { buildTest, scoreTest, checkAnswer, FORMAT, BREAK_MINUTES } from "./src/testBuilder.js";
+import { aiEnabled, extractFromPdf, extractFromText, generateSimilar, tutorStream, verifyQuestion, mapLimit } from "./src/ai.js";
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 32 * 1024 * 1024, files: 20 } });
@@ -22,9 +22,10 @@ app.use("/vendor/dompurify", express.static(path.resolve("node_modules/dompurify
 const newId = (p) => `${p}_${crypto.randomBytes(6).toString("hex")}`;
 
 function counts() {
-  const c = { total: 0, rw: { easy: 0, medium: 0, hard: 0 }, math: { easy: 0, medium: 0, hard: 0 } };
+  const c = { total: 0, mismatch: 0, rw: { easy: 0, medium: 0, hard: 0 }, math: { easy: 0, medium: 0, hard: 0 } };
   for (const q of questions.all()) {
     c.total++;
+    if (q.verify?.status === "mismatch") c.mismatch++;
     c[q.section][q.difficulty]++;
   }
   return c;
@@ -36,8 +37,11 @@ app.get("/api/status", (req, res) => {
 
 // ---------------- Ngân hàng câu hỏi ----------------
 app.get("/api/questions", (req, res) => {
-  const { section, difficulty, q, source } = req.query;
+  const { section, difficulty, q, source, verify } = req.query;
   let list = questions.all();
+  if (verify === "unchecked") list = list.filter((x) => !x.verify || x.verify.status === "error");
+  else if (verify === "ok") list = list.filter((x) => ["ok", "resolved", "kept"].includes(x.verify?.status));
+  else if (verify) list = list.filter((x) => x.verify?.status === verify);
   if (section) list = list.filter((x) => x.section === section);
   if (difficulty) list = list.filter((x) => x.difficulty === difficulty);
   if (source) list = list.filter((x) => x.source === source);
@@ -65,7 +69,67 @@ app.put("/api/questions/:id", (req, res) => {
   const existing = questions.get(req.params.id);
   if (!existing) return res.status(404).json({ error: "Không tìm thấy câu hỏi." });
   const merged = normalizeQuestion({ ...existing, ...req.body, id: existing.id });
+  // Sửa đáp án tay thì kết quả kiểm tra cũ không còn giá trị.
+  merged.verify = existing.verify && existing.answer === merged.answer ? existing.verify : null;
   res.json(questions.update(existing.id, merged));
+});
+
+// Chọn giữa đáp án của file và đáp án AI sau khi kiểm tra.
+app.post("/api/questions/:id/resolve", (req, res) => {
+  const q = questions.get(req.params.id);
+  if (!q?.verify) return res.status(404).json({ error: "Câu này chưa được AI kiểm tra." });
+  if (req.body.use === "ai") {
+    const fixed = normalizeQuestion({ ...q, answer: q.verify.aiAnswer, explanation: q.verify.aiExplanation, answerSource: "ai" });
+    return res.json(questions.update(q.id, { answer: fixed.answer, explanation: fixed.explanation, answerSource: "ai", verify: { ...q.verify, status: "resolved" } }));
+  }
+  res.json(questions.update(q.id, { verify: { ...q.verify, status: "kept" } }));
+});
+
+// ---------------- AI kiểm tra đáp án ----------------
+function compareAnswers(q, aiAnswer) {
+  if (!q.answer) return "mismatch";
+  if (q.type === "mcq") return q.answer === aiAnswer.trim().toUpperCase().replace(/[^A-D]/g, "").slice(0, 1) ? "ok" : "mismatch";
+  return aiAnswer.split("|").some((a) => checkAnswer(q, a)) ? "ok" : "mismatch";
+}
+
+async function verifyMany(ids, job) {
+  const list = ids.map((id) => questions.get(id)).filter(Boolean);
+  let done = 0;
+  job.verify = { total: list.length, checked: 0, mismatch: 0, errors: 0 };
+  await mapLimit(list, 4, async (q) => {
+    let verify;
+    try {
+      const r = await verifyQuestion(q);
+      const aiAnswer = q.type === "mcq" ? r.answer.trim().toUpperCase().replace(/[^A-D]/g, "").slice(0, 1) : r.answer.trim();
+      verify = { status: compareAnswers(q, r.answer), fileAnswer: q.answer, aiAnswer, confidence: r.confidence, aiExplanation: r.explanation, at: new Date().toISOString() };
+      if (verify.status === "mismatch") job.verify.mismatch++;
+    } catch (err) {
+      verify = { status: "error", error: err.message, at: new Date().toISOString() };
+      job.verify.errors++;
+    }
+    questions.update(q.id, { verify });
+    job.verify.checked = ++done;
+    job.message = `AI đã kiểm tra ${done}/${list.length} câu — ${job.verify.mismatch} câu nghi sai đáp án.`;
+  });
+}
+
+app.post("/api/verify", (req, res) => {
+  if (!aiEnabled()) return res.status(503).json({ error: "AI chưa được bật. Thêm ANTHROPIC_API_KEY rồi chạy lại server." });
+  const { ids = [], force = false } = req.body || {};
+  const todo = ids.filter((id) => {
+    const q = questions.get(id);
+    return q && (force || !q.verify || q.verify.status === "error");
+  });
+  if (!todo.length) return res.status(400).json({ error: "Không có câu nào cần kiểm tra (các câu đã được kiểm tra trước đó)." });
+  const job = { id: newId("job"), status: "running", message: "AI đang giải lại các câu…", added: 0, found: 0, errors: [] };
+  jobs.set(job.id, job);
+  verifyMany(todo, job)
+    .catch((err) => job.errors.push(err.message))
+    .finally(() => {
+      job.status = "done";
+      job.message = `Đã kiểm tra ${job.verify.checked} câu: ${job.verify.mismatch} câu nghi sai đáp án${job.verify.errors ? `, ${job.verify.errors} câu lỗi` : ""}.`;
+    });
+  res.json({ jobId: job.id, count: todo.length });
 });
 
 app.delete("/api/questions/:id", (req, res) => {
@@ -114,23 +178,37 @@ app.post("/api/upload", upload.array("files"), (req, res) => {
   if (!req.files?.length) return res.status(400).json({ error: "Chưa chọn file." });
   const opts = {
     useAI: req.body.useAI !== "false",
+    verify: req.body.verify === "true",
     section: req.body.section || "",
     difficulty: req.body.difficulty || "",
   };
   const job = { id: newId("job"), status: "running", message: "Đang xử lý…", added: 0, found: 0, errors: [] };
   jobs.set(job.id, job);
   (async () => {
+    const ids = [];
     for (const file of req.files) {
       try {
         const qs = await processFile(file, opts, job);
         job.found += qs.length;
         job.added += questions.upsertMany(qs);
+        ids.push(...qs.map((q) => q.id));
       } catch (err) {
         job.errors.push(err.message || String(err));
       }
     }
+    let msg = `Đã đọc ${job.found} câu, thêm mới ${job.added} câu vào ngân hàng.`;
+    // Kiểm tra đáp án lấy từ file (câu do AI tự giải thì đã là đáp án AI).
+    const toVerify = ids.filter((id) => questions.get(id)?.answerSource === "file" && !questions.get(id)?.verify);
+    if (opts.verify && aiEnabled() && toVerify.length) {
+      try {
+        await verifyMany(toVerify, job);
+        msg += ` AI kiểm tra ${job.verify.checked} câu: ${job.verify.mismatch} câu nghi sai đáp án.`;
+      } catch (err) {
+        job.errors.push(err.message);
+      }
+    }
     job.status = "done";
-    job.message = `Đã đọc ${job.found} câu, thêm mới ${job.added} câu vào ngân hàng.`;
+    job.message = msg;
   })();
   res.json({ jobId: job.id });
 });

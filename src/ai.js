@@ -59,23 +59,59 @@ Rules for every question you output:
 - domain: one of "Craft and Structure", "Information and Ideas", "Standard English Conventions", "Expression of Ideas" (RW) or "Algebra", "Advanced Math", "Problem-Solving and Data Analysis", "Geometry and Trigonometry" (Math).
 - Skip directions pages, cover pages, answer sheets and anything that is not a question. Never invent questions that are not in the material.`;
 
-async function runExtraction(content) {
+async function structuredCall({ system, content, schema, effort, maxTokens = 64000 }) {
   const stream = getClient().beta.messages.stream({
     model: MODEL,
-    max_tokens: 64000,
+    max_tokens: maxTokens,
     ...FALLBACK,
-    output_config: { effort: "medium", format: { type: "json_schema", schema: QUESTION_SCHEMA } },
-    system: EXTRACT_SYSTEM,
+    output_config: { effort, format: { type: "json_schema", schema } },
+    system,
     messages: [{ role: "user", content }],
   });
   const msg = await stream.finalMessage();
-  if (msg.stop_reason === "refusal") throw new Error("AI từ chối xử lý phần này của file.");
-  const text = msg.content.filter((b) => b.type === "text").map((b) => b.text).join("");
-  if (msg.stop_reason === "max_tokens") throw new Error("Phần đề quá dài, AI bị cắt ngang — hãy chia file nhỏ hơn.");
-  return JSON.parse(text).questions ?? [];
+  if (msg.stop_reason === "refusal") throw new Error("AI từ chối xử lý yêu cầu này.");
+  if (msg.stop_reason === "max_tokens") throw new Error("Nội dung quá dài, AI bị cắt ngang — hãy chia file nhỏ hơn.");
+  return JSON.parse(msg.content.filter((b) => b.type === "text").map((b) => b.text).join(""));
 }
 
-async function mapLimit(items, limit, fn) {
+async function runExtraction(content) {
+  const data = await structuredCall({ system: EXTRACT_SYSTEM, content, schema: QUESTION_SCHEMA, effort: "medium" });
+  return data.questions ?? [];
+}
+
+// ---------------- Kiểm tra đáp án ----------------
+const VERIFY_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["answer", "confidence", "explanation"],
+  properties: {
+    answer: { type: "string" },
+    confidence: { type: "string", enum: ["high", "medium", "low"] },
+    explanation: { type: "string" },
+  },
+};
+
+const VERIFY_SYSTEM = `You are an expert digital SAT solver checking an answer key. Solve the question yourself from scratch, carefully and rigorously (for Math, verify by substitution or a second method; for Reading and Writing, pick the choice that is fully supported by the text and conventions, eliminating the other three).
+Return:
+- answer: for multiple choice, the single letter A-D; for student-produced response, every acceptable entry separated by "|" (e.g. "2/3|.6666|.6667|0.666|0.667").
+- confidence: "high" only if you are certain; "low" if the question is ambiguous, seems broken, or depends on a figure you cannot see.
+- explanation: concise solution in Vietnamese (use LaTeX in $...$ for math), including why the most tempting wrong choice is wrong.`;
+
+// AI giải lại câu hỏi mà KHÔNG được xem đáp án trong file, để không bị đáp án sai dẫn dắt.
+export async function verifyQuestion(q) {
+  const parts = [`Section: ${q.section === "math" ? "Math" : "Reading and Writing"}`];
+  if (q.passage) parts.push(`Passage:\n${q.passage}`);
+  if (q.figure) parts.push(`Figure description: ${q.figure}`);
+  parts.push(`Question: ${q.prompt}`);
+  if (q.type === "mcq") parts.push(q.choices.map((c, i) => `${"ABCD"[i]}) ${c}`).join("\n"));
+  else parts.push("(Student-produced response: no answer choices.)");
+  const content = [];
+  if (q.image && /^https?:\/\//.test(q.image)) content.push({ type: "image", source: { type: "url", url: q.image } });
+  content.push({ type: "text", text: parts.join("\n\n") });
+  return structuredCall({ system: VERIFY_SYSTEM, content, schema: VERIFY_SCHEMA, effort: "high", maxTokens: 32000 });
+}
+
+export async function mapLimit(items, limit, fn) {
   const out = new Array(items.length);
   let next = 0;
   const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {

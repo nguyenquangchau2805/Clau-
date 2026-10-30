@@ -100,6 +100,7 @@
           </div>
         </div>
         <label class="check"><input type="checkbox" id="upAi" checked /> Dùng AI đọc đề (PDF scan, đề không theo mẫu, tự giải nếu thiếu đáp án)</label>
+        <label class="check"><input type="checkbox" id="upVerify" /> Sau khi tải, cho AI giải lại để kiểm tra đáp án trong file</label>
         <button class="btn primary" id="btnUpload" disabled>Tải lên & đọc đề</button>
         <div id="uploadMsg"></div>
       </section>
@@ -134,11 +135,14 @@ Answer: 5</pre>
       <div class="row between" style="margin-bottom:12px">
         <h2 style="margin:0">Câu hỏi trong ngân hàng <span class="muted" id="bankTotal"></span></h2>
         <div class="row">
+          <button class="btn small primary" id="btnVerify">🔍 AI kiểm tra đáp án</button>
           <a class="btn small" href="/api/questions/export">⬇ Xuất JSON</a>
           <button class="btn small danger" id="btnClear">Xoá theo bộ lọc nguồn</button>
         </div>
       </div>
+      <div id="verifyMsg"></div>
       <div class="row" style="margin-bottom:12px">
+        <select class="input" id="fVerify" style="width:auto"><option value="">Mọi trạng thái đáp án</option><option value="mismatch">⚠ Nghi sai đáp án</option><option value="ok">✓ AI đã xác nhận</option><option value="unchecked">Chưa kiểm tra</option></select>
         <select class="input" id="fSection" style="width:auto"><option value="">Tất cả phần</option><option value="rw">Reading & Writing</option><option value="math">Math</option></select>
         <select class="input" id="fDifficulty" style="width:auto"><option value="">Mọi độ khó</option><option value="easy">Dễ</option><option value="medium">Trung bình</option><option value="hard">Khó</option></select>
         <select class="input" id="fSource" style="width:auto"><option value="">Mọi nguồn</option></select>

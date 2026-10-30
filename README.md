@@ -25,6 +25,13 @@ Web luyện đề SAT với giao diện mô phỏng ứng dụng **Bluebook**. B
 - Nếu bật AI: Claude đọc PDF bất kỳ (cả bản scan, có công thức hay bảng), tự nhận diện phần, độ khó và domain, rồi lấy đáp án từ answer key trong file. Nếu file không có đáp án thì AI tự giải và câu đó được gắn nhãn "AI".
 - Trong ngân hàng đề bạn có thể xem, sửa và xoá câu, lọc theo nguồn, hoặc xuất ra JSON.
 
+**AI kiểm tra đáp án** (cho file có đáp án sai)
+- Bấm **🔍 AI kiểm tra đáp án** trong Ngân hàng đề, hoặc tick "Sau khi tải, cho AI giải lại…" lúc tải file lên.
+- AI giải lại từng câu ở mức suy nghĩ cao nhất và **không được xem đáp án trong file**, để không bị đáp án sai dẫn dắt.
+- Câu nào AI ra khác với file thì bị đánh dấu **⚠ Nghi sai**. Mở câu đó ra sẽ thấy đáp án file, đáp án AI, độ tin cậy và lời giải của AI. Bạn chọn **Dùng đáp án AI** hoặc **Giữ đáp án file**; web không tự ghi đè.
+- Lọc nhanh các câu nghi sai bằng bộ lọc "⚠ Nghi sai đáp án". Câu đã kiểm tra sẽ không bị kiểm tra lại (đỡ tốn phí).
+- AI không đúng 100%, nhất là với câu có hình hoặc đồ thị. Câu nào AI để độ tin cậy "thấp" thì nên tự xem lại.
+
 **Kết quả và AI**
 - Điểm ước tính trên thang 200–800 cho mỗi phần, xem đúng/sai theo module và theo domain, thời gian làm từng câu, lọc câu sai, câu bỏ trống hoặc câu đã đánh dấu.
 - Gia sư AI:
