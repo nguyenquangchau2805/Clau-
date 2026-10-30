@@ -155,7 +155,7 @@ Quy tắc:
 - Domain RW: Craft and Structure, Information and Ideas, Standard English Conventions, Expression of Ideas.
 - Domain Math: Algebra, Advanced Math, Problem-Solving and Data Analysis, Geometry and Trigonometry.
 - Math: công thức viết LaTeX trong $...$ (ví dụ $\\frac{3}{4}x + 2 = 5$). Câu Math không có đáp án A-D thì bỏ các dòng A-D, chỉ ghi "Answer:"; nếu có nhiều cách ghi đúng thì ngăn bằng dấu | (ví dụ Answer: 2/3 | .6667).
-- Câu có hình/đồ thị: thêm dòng "Passage:" mô tả hình đủ chi tiết để giải (trục, điểm, giá trị).
+- Câu có hình/đồ thị/biểu đồ: thêm dòng "Figure: <mô tả ngắn hình đó>" ngay dưới dòng ###, mô tả đủ chi tiết (trục, điểm, giá trị). Mình sẽ tự dán ảnh thật vào sau.
 - Chỗ trống trong đoạn văn ghi là ______ ; bảng ghi dạng | cột 1 | cột 2 |.
 - Nếu đề có đáp án / answer key thì dùng đáp án đó. Nếu không có thì tự giải thật cẩn thận.
 - Độ khó: dùng nhãn trong đề nếu có, nếu không thì tự đánh giá easy/medium/hard như College Board.
@@ -198,7 +198,7 @@ const PAGE = 50;
 
 async function loadBank(reset) {
   const params = new URLSearchParams();
-  for (const [k, id] of [["section", "#fSection"], ["difficulty", "#fDifficulty"], ["source", "#fSource"], ["verify", "#fVerify"], ["q", "#fQuery"]]) {
+  for (const [k, id] of [["section", "#fSection"], ["difficulty", "#fDifficulty"], ["source", "#fSource"], ["verify", "#fVerify"], ["figure", "#fFigure"], ["q", "#fQuery"]]) {
     if ($(id).value) params.set(k, $(id).value);
   }
   const data = await api(`/api/questions?${params}`);
@@ -210,6 +210,10 @@ async function loadBank(reset) {
   if (data.counts.mismatch && $("#fVerify").value !== "mismatch" && !vm.dataset.busy) {
     vm.innerHTML = `<div class="notice err">⚠ Có <b>${data.counts.mismatch}</b> câu AI giải ra khác đáp án trong file. <a href="#" data-showmismatch>Xem các câu này</a></div>`;
   } else if (!vm.dataset.busy) vm.innerHTML = "";
+  $("#figureMsg").innerHTML =
+    data.counts.missingImage && $("#fFigure").value !== "missing"
+      ? `<div class="notice">🖼 Có <b>${data.counts.missingImage}</b> câu có hình/đồ thị nhưng chưa gắn ảnh. <a href="#" data-showmissing>Xem và dán ảnh</a></div>`
+      : "";
   if (reset) {
     shown = 0;
     $("#bankRows").innerHTML = "";
@@ -222,7 +226,8 @@ function renderMore() {
     (q) => `<tr data-id="${q.id}">
       <td><span class="tag ${q.section}">${SECTION_NAME[q.section]}</span></td>
       <td><span class="tag ${q.difficulty}">${DIFF_NAME[q.difficulty]}</span></td>
-      <td><div class="clip">${esc(q.prompt || q.passage)}</div><div class="muted" style="font-size:12px">${esc(q.domain)}${q.source ? " · " + esc(q.source) : ""}</div></td>
+      <td><div class="clip">${esc(q.prompt || q.passage)}</div><div class="muted" style="font-size:12px">${esc(q.domain)}${q.source ? " · " + esc(q.source) : ""}
+        ${q.image ? ' <span class="tag">🖼 Có hình</span>' : q.figure ? ' <span class="tag hard">⚠ Thiếu hình</span>' : ""}</div></td>
       <td>${esc(q.answer || "—")}${q.answerSource === "ai" ? ' <span class="tag" title="Đáp án do AI giải">AI</span>' : ""}${verifyBadge(q)}</td>
       <td style="white-space:nowrap"><button class="btn small" data-act="view">Xem / sửa</button> <button class="btn small danger" data-act="del">Xoá</button></td>
     </tr>`
@@ -243,6 +248,13 @@ function verifyBadge(q) {
   if (v.status === "kept") return `<div><span class="tag">Giữ đáp án file</span></div>`;
   return `<div><span class="tag" title="${esc(v.error)}">Lỗi kiểm tra</span></div>`;
 }
+
+$("#figureMsg").addEventListener("click", (e) => {
+  if (!e.target.matches("[data-showmissing]")) return;
+  e.preventDefault();
+  $("#fFigure").value = "missing";
+  loadBank(true);
+});
 
 $("#verifyMsg").addEventListener("click", (e) => {
   if (!e.target.matches("[data-showmismatch]")) return;
@@ -271,7 +283,7 @@ $("#btnVerify").onclick = async () => {
   await loadBank(true);
   vm.insertAdjacentHTML("afterbegin", `<div class="notice ok">${esc(summary)}</div>`);
 };
-for (const id of ["#fSection", "#fDifficulty", "#fSource", "#fVerify"]) $(id).onchange = () => loadBank(true);
+for (const id of ["#fSection", "#fDifficulty", "#fSource", "#fVerify", "#fFigure"]) $(id).onchange = () => loadBank(true);
 let qTimer;
 $("#fQuery").oninput = () => {
   clearTimeout(qTimer);
@@ -318,17 +330,72 @@ function verifyPanel(q) {
   </div>`;
 }
 
+// ---------------- Gắn ảnh cho câu hỏi ----------------
+let imageQ = null; // câu đang mở trong hộp thoại
+let imageChanged = false;
+
+function paintImage(note = "") {
+  const area = $("#imgArea");
+  if (!area || !imageQ) return;
+  const q = imageQ;
+  area.innerHTML = `<div class="imgzone" id="imgZone">
+      ${q.image ? `<img src="${esc(q.image)}" alt="Hình minh hoạ" />` : `<div style="font-size:26px">🖼</div>`}
+      <div>${q.image ? "Dán ảnh khác bằng <b>Ctrl + V</b> để thay" : "Chụp hình trong PDF (<b>Win + Shift + S</b>), rồi bấm <b>Ctrl + V</b> ở đây để dán"}</div>
+      <div class="row" style="justify-content:center;margin-top:8px">
+        <button class="btn small" data-pickimg>Chọn file ảnh…</button>
+        ${q.image ? `<button class="btn small danger" data-delimg>Xoá ảnh</button>` : ""}
+      </div>
+      ${q.figure && !q.image ? `<div style="margin-top:8px;font-size:13px">Hình cần có: ${esc(q.figure)}</div>` : ""}
+      ${note ? `<div style="margin-top:8px">${note}</div>` : ""}
+      <input type="file" id="imgFile" accept="image/png,image/jpeg,image/gif,image/webp" hidden />
+    </div>`;
+  $("#imgFile").onchange = (e) => e.target.files[0] && uploadImage(e.target.files[0]);
+  const zone = $("#imgZone");
+  zone.ondragover = (e) => {
+    e.preventDefault();
+    zone.classList.add("drag");
+  };
+  zone.ondragleave = () => zone.classList.remove("drag");
+  zone.ondrop = (e) => {
+    e.preventDefault();
+    const f = [...e.dataTransfer.files].find((x) => x.type.startsWith("image/"));
+    if (f) uploadImage(f);
+  };
+}
+
+async function uploadImage(file) {
+  paintImage("Đang tải ảnh lên…");
+  const fd = new FormData();
+  fd.append("image", file, file.name || "hinh.png");
+  try {
+    imageQ = await api(`/api/questions/${imageQ.id}/image`, { method: "POST", body: fd });
+    imageChanged = true;
+    paintImage(`<span style="color:var(--ok)">✓ Đã lưu ảnh</span>`);
+  } catch (err) {
+    paintImage(`<span style="color:var(--bad)">${esc(err.message)}</span>`);
+  }
+}
+
+// Ctrl+V khi hộp thoại câu hỏi đang mở: nếu clipboard có ảnh thì gắn vào câu đó.
+document.addEventListener("paste", (e) => {
+  if (!$("#imgArea") || !imageQ) return;
+  const file = [...(e.clipboardData?.files || [])].find((f) => f.type.startsWith("image/"));
+  if (!file) return; // dán chữ vào ô nhập thì để bình thường
+  e.preventDefault();
+  uploadImage(file);
+});
+
 function editModal(q) {
   const root = $("#modalRoot");
   root.innerHTML = `<div class="modal-back"><div class="modal">
     <div class="row between"><h2>Câu hỏi</h2><button class="btn small ghost" data-close>✕</button></div>
     <div class="card" style="box-shadow:none;margin-bottom:14px" id="preview">
       ${q.passage ? `<div>${rich(q.passage)}</div><hr style="border:none;border-top:1px solid #eee">` : ""}
-      ${q.figure ? `<div class="notice">Hình: ${esc(q.figure)}</div>` : ""}
       <div><b>${rich(q.prompt)}</b></div>
       ${q.choices.map((c, i) => `<div class="pv-inline">${"ABCD"[i]}) ${rich(c)}</div>`).join("")}
       ${q.explanation ? `<div class="notice ok" style="margin-top:10px"><b>Giải thích:</b> ${rich(q.explanation)}</div>` : ""}
     </div>
+    <div class="field"><span class="label">Hình minh hoạ (đồ thị, hình vẽ, bảng dạng ảnh)</span><div id="imgArea"></div></div>
     ${verifyPanel(q)}
     <div class="row">
       <div class="field" style="flex:1"><label>Phần</label><select class="input" name="section"><option value="rw">Reading & Writing</option><option value="math">Math</option></select></div>
@@ -339,16 +406,32 @@ function editModal(q) {
     <div class="field"><label>Đoạn văn (passage)</label><textarea class="input" name="passage"></textarea></div>
     <div class="field"><label>Câu hỏi</label><textarea class="input" name="prompt"></textarea></div>
     ${q.type === "mcq" ? q.choices.map((c, i) => `<div class="field"><label>Đáp án ${"ABCD"[i]}</label><input class="input" name="choice${i}" /></div>`).join("") : ""}
+    <div class="field"><label>Mô tả hình bằng chữ (Figure) — câu có mô tả mà chưa có ảnh sẽ hiện nhãn "Thiếu hình"</label><textarea class="input" name="figure" style="min-height:60px"></textarea></div>
     <div class="field"><label>Giải thích</label><textarea class="input" name="explanation"></textarea></div>
     <div class="row" style="justify-content:flex-end"><button class="btn" data-close>Huỷ</button><button class="btn primary" data-save>Lưu</button></div>
   </div></div>`;
   const form = $(".modal", root);
-  for (const k of ["section", "difficulty", "answer", "domain", "passage", "prompt", "explanation"]) form.querySelector(`[name=${k}]`).value = q[k] ?? "";
+  for (const k of ["section", "difficulty", "answer", "domain", "passage", "prompt", "figure", "explanation"]) form.querySelector(`[name=${k}]`).value = q[k] ?? "";
+  imageQ = q;
+  paintImage();
   q.choices.forEach((c, i) => (form.querySelector(`[name=choice${i}]`).value = c));
   renderMath($("#preview", root));
   if ($("#verifyPanel", root)) renderMath($("#verifyPanel", root));
   root.onclick = async (e) => {
-    if (e.target.matches("[data-close], .modal-back")) root.innerHTML = "";
+    if (e.target.matches("[data-close], .modal-back")) {
+      root.innerHTML = "";
+      if (imageChanged) {
+        loadBank(true);
+        loadStatus();
+      }
+      imageChanged = false;
+    }
+    if (e.target.matches("[data-pickimg]")) $("#imgFile", root).click();
+    if (e.target.matches("[data-delimg]")) {
+      imageQ = await api(`/api/questions/${q.id}/image`, { method: "DELETE" });
+      imageChanged = true;
+      paintImage();
+    }
     if (e.target.matches("[data-resolve]")) {
       await api(`/api/questions/${q.id}/resolve`, { method: "POST", body: { use: e.target.dataset.resolve } });
       root.innerHTML = "";
@@ -358,7 +441,7 @@ function editModal(q) {
     }
     if (e.target.matches("[data-save]")) {
       const body = {};
-      for (const k of ["section", "difficulty", "answer", "domain", "passage", "prompt", "explanation"]) body[k] = form.querySelector(`[name=${k}]`).value;
+      for (const k of ["section", "difficulty", "answer", "domain", "passage", "prompt", "figure", "explanation"]) body[k] = form.querySelector(`[name=${k}]`).value;
       if (q.type === "mcq") body.choices = q.choices.map((_, i) => form.querySelector(`[name=choice${i}]`).value);
       body.answerSource = "file";
       await api(`/api/questions/${q.id}`, { method: "PUT", body });

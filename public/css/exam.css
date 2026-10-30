@@ -54,6 +54,8 @@ body.exam .serif, .passage, .qprompt, .choice-text { font-family: "Noto Serif", 
 .passage p { margin: 0 0 1em; }
 .figure-box { border: 1px dashed #999; background: #fafafa; padding: 10px 14px; border-radius: 8px; font-size: 14px; font-family: inherit; margin-bottom: 14px; }
 .figure-box img { max-width: 100%; }
+.figure-box.figure-img { border: none; background: none; padding: 0; text-align: center; }
+.figure-box.figure-img img { max-height: 420px; object-fit: contain; }
 table.qtable { border-collapse: collapse; margin: 10px 0; font-size: 15px; }
 table.qtable th, table.qtable td { border: 1px solid #555; padding: 5px 10px; text-align: center; }
 table.qtable th { background: #f2f2f2; }

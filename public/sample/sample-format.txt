@@ -6,6 +6,8 @@ Mẫu file văn bản để tải đề lên mà KHÔNG cần AI.
   nhiều đáp án đúng cách nhau bằng dấu |  (ví dụ: Answer: 3/4 | 0.75).
 - Công thức toán viết giữa hai dấu $ ... $ (LaTeX). Bảng có thể viết dạng markdown | a | b |.
 - Dòng gạch chân: viết __từ__ để gạch chân, **từ** để in đậm.
+- Câu có hình/đồ thị: thêm dòng "Image: ten-anh.png" và chọn file ảnh đó CÙNG LÚC với file .txt khi tải lên.
+  Hoặc chỉ ghi "Figure: <mô tả hình>" rồi dán ảnh chụp màn hình sau trong Ngân hàng đề (Xem / sửa → Ctrl + V).
 
 ### RW | medium | Craft and Structure
 Passage: Urban planners in Copenhagen have spent decades redesigning streets to

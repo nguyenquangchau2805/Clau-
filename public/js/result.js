@@ -47,8 +47,7 @@ function itemHtml(q, i) {
       <span class="muted" style="font-size:12px;width:48px;text-align:right">${fmtSec(r.timeSpent?.[q.id])}</span></summary>
     <div class="qbody">
       ${q.passage ? `<div class="passage">${rich(q.passage)}</div>` : ""}
-      ${q.figure ? `<div class="notice">Hình: ${rich(q.figure)}</div>` : ""}
-      ${q.image ? `<img src="${esc(q.image)}" style="max-width:100%" alt="figure" />` : ""}
+      ${q.image ? `<img src="${esc(q.image)}" style="max-width:100%;max-height:420px" alt="figure" />` : q.figure ? `<div class="notice">Hình: ${rich(q.figure)}</div>` : ""}
       <p><b>${rich(q.prompt)}</b></p>
       ${opts}
       ${q.explanation ? `<div class="notice ok" style="margin-top:12px"><b>Giải thích${q.answerSource === "ai" ? " (AI)" : ""}:</b> ${rich(q.explanation)}</div>` : ""}

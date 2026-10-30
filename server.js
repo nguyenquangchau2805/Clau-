@@ -3,11 +3,12 @@ import { exec } from "node:child_process";
 import multer from "multer";
 import crypto from "node:crypto";
 import path from "node:path";
+import fs from "node:fs";
 import mammoth from "mammoth";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 
-import { questions, tests, results } from "./src/store.js";
-import { normalizeQuestion, parseJson, parseStructuredText, publicQuestion } from "./src/questions.js";
+import { questions, tests, results, IMAGE_DIR } from "./src/store.js";
+import { normalizeQuestion, parseJson, parseStructuredText, publicQuestion, missingImage } from "./src/questions.js";
 import { buildTest, scoreTest, checkAnswer, FORMAT, BREAK_MINUTES } from "./src/testBuilder.js";
 import { aiEnabled, extractFromPdf, extractFromText, generateSimilar, tutorStream, verifyQuestion, mapLimit } from "./src/ai.js";
 
@@ -20,6 +21,7 @@ const app = express();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100 * 1024 * 1024, files: 20 } });
 app.use(express.json({ limit: "5mb" }));
 app.use(express.static(path.resolve("public")));
+app.use("/images", express.static(IMAGE_DIR, { maxAge: "30d", immutable: true }));
 // Thư viện hiển thị công thức / markdown phục vụ trực tiếp từ node_modules (không phụ thuộc CDN).
 app.use("/vendor/katex", express.static(path.resolve("node_modules/katex/dist")));
 app.use("/vendor/marked", express.static(path.resolve("node_modules/marked")));
@@ -27,11 +29,27 @@ app.use("/vendor/dompurify", express.static(path.resolve("node_modules/dompurify
 
 const newId = (p) => `${p}_${crypto.randomBytes(6).toString("hex")}`;
 
+// ---------------- Ảnh minh hoạ (hình, đồ thị) ----------------
+const IMAGE_TYPES = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp" };
+const MIME_EXT = { "image/png": ".png", "image/jpeg": ".jpg", "image/gif": ".gif", "image/webp": ".webp" };
+const isImageFile = (name) => Boolean(IMAGE_TYPES[path.extname(name).toLowerCase()]);
+const fileName = (file) => Buffer.from(file.originalname, "latin1").toString("utf8");
+
+// Lưu ảnh theo mã băm nội dung (ảnh trùng chỉ lưu 1 lần), trả về đường dẫn để hiển thị.
+function saveImage(buffer, ext) {
+  fs.mkdirSync(IMAGE_DIR, { recursive: true });
+  const name = crypto.createHash("sha1").update(buffer).digest("hex").slice(0, 16) + ext;
+  const full = path.join(IMAGE_DIR, name);
+  if (!fs.existsSync(full)) fs.writeFileSync(full, buffer);
+  return `/images/${name}`;
+}
+
 function counts() {
-  const c = { total: 0, mismatch: 0, rw: { easy: 0, medium: 0, hard: 0 }, math: { easy: 0, medium: 0, hard: 0 } };
+  const c = { total: 0, mismatch: 0, missingImage: 0, rw: { easy: 0, medium: 0, hard: 0 }, math: { easy: 0, medium: 0, hard: 0 } };
   for (const q of questions.all()) {
     c.total++;
     if (q.verify?.status === "mismatch") c.mismatch++;
+    if (missingImage(q)) c.missingImage++;
     c[q.section][q.difficulty]++;
   }
   return c;
@@ -43,8 +61,10 @@ app.get("/api/status", (req, res) => {
 
 // ---------------- Ngân hàng câu hỏi ----------------
 app.get("/api/questions", (req, res) => {
-  const { section, difficulty, q, source, verify } = req.query;
+  const { section, difficulty, q, source, verify, figure } = req.query;
   let list = questions.all();
+  if (figure === "missing") list = list.filter(missingImage);
+  else if (figure === "has") list = list.filter((x) => x.image);
   if (verify === "unchecked") list = list.filter((x) => !x.verify || x.verify.status === "error");
   else if (verify === "ok") list = list.filter((x) => ["ok", "resolved", "kept"].includes(x.verify?.status));
   else if (verify) list = list.filter((x) => x.verify?.status === verify);
@@ -138,6 +158,22 @@ app.post("/api/verify", (req, res) => {
   res.json({ jobId: job.id, count: todo.length });
 });
 
+// Gắn ảnh cho câu hỏi: dán ảnh chụp màn hình (Ctrl+V) hoặc chọn file trong trang Ngân hàng đề.
+app.post("/api/questions/:id/image", upload.single("image"), (req, res) => {
+  const q = questions.get(req.params.id);
+  if (!q) return res.status(404).json({ error: "Không tìm thấy câu hỏi." });
+  const ext = MIME_EXT[req.file?.mimetype];
+  if (!ext) return res.status(400).json({ error: "Chỉ nhận ảnh PNG, JPG, GIF hoặc WEBP." });
+  if (req.file.size > 8 * 1024 * 1024) return res.status(400).json({ error: "Ảnh quá lớn (tối đa 8MB)." });
+  res.json(questions.update(q.id, { image: saveImage(req.file.buffer, ext) }));
+});
+
+app.delete("/api/questions/:id/image", (req, res) => {
+  const q = questions.get(req.params.id);
+  if (!q) return res.status(404).json({ error: "Không tìm thấy câu hỏi." });
+  res.json(questions.update(q.id, { image: "" }));
+});
+
 app.delete("/api/questions/:id", (req, res) => {
   res.json({ removed: questions.remove((x) => x.id === req.params.id) });
 });
@@ -199,9 +235,23 @@ app.post("/api/upload", upload.array("files"), (req, res) => {
   jobs.set(job.id, job);
   (async () => {
     const ids = [];
-    for (const file of req.files) {
+    // Ảnh tải lên cùng file đề: câu nào ghi "Image: ten-anh.png" sẽ được gắn ảnh đó.
+    const images = new Map();
+    for (const file of req.files.filter((f) => isImageFile(fileName(f)))) {
+      const name = fileName(file);
+      images.set(name.toLowerCase(), saveImage(file.buffer, path.extname(name).toLowerCase().replace(".jpeg", ".jpg")));
+    }
+    const docs = req.files.filter((f) => !isImageFile(fileName(f)));
+    if (!docs.length) job.errors.push("Chỉ có ảnh mà không có file đề. Hãy chọn cả file đề (.txt/.json) có dòng Image: cùng lúc với ảnh.");
+    for (const file of docs) {
       try {
         const qs = await processFile(file, opts, job);
+        for (const q of qs) {
+          if (!q.image || /^(https?:|data:|\/images\/)/.test(q.image)) continue;
+          const url = images.get(path.basename(q.image).toLowerCase());
+          if (!url) job.errors.push(`Không thấy ảnh "${q.image}" — hãy chọn file ảnh này cùng lúc với file đề.`);
+          q.image = url || "";
+        }
         job.found += qs.length;
         job.added += questions.upsertMany(qs);
         ids.push(...qs.map((q) => q.id));

@@ -65,3 +65,11 @@ test("text pasted from a chat code block ignores the fences", () => {
   assert.equal(qs.length, 1);
   assert.equal(qs[0].explanation, "x = 2");
 });
+
+test("template supports Figure: and Image: lines", () => {
+  const qs = parseStructuredText("### Math | hard | Advanced Math\nFigure: Parabola, vertex (2, 5)\nImage: cau12.png\nQuestion: What is the maximum value of f?\nAnswer: 5");
+  assert.equal(qs[0].figure, "Parabola, vertex (2, 5)");
+  assert.equal(qs[0].image, "cau12.png");
+  assert.match(qs[0].prompt, /maximum/);
+  assert.ok(!qs[0].prompt.includes("Image"));
+});

@@ -2,7 +2,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const DATA_DIR = process.env.DATA_DIR || path.resolve("data");
+export const DATA_DIR = process.env.DATA_DIR || path.resolve("data");
+export const IMAGE_DIR = path.join(DATA_DIR, "images");
 
 function file(name) {
   return path.join(DATA_DIR, `${name}.json`);

@@ -25,6 +25,12 @@ Web luyện đề SAT với giao diện mô phỏng ứng dụng **Bluebook**. B
 - Nếu bật AI: Claude đọc PDF bất kỳ (cả bản scan, có công thức hay bảng), tự nhận diện phần, độ khó và domain, rồi lấy đáp án từ answer key trong file. Nếu file không có đáp án thì AI tự giải và câu đó được gắn nhãn "AI".
 - Trong ngân hàng đề bạn có thể xem, sửa và xoá câu, lọc theo nguồn, hoặc xuất ra JSON.
 
+**Câu có hình / đồ thị**
+- Vào Ngân hàng đề, bấm **Xem / sửa** ở câu cần hình. Chụp hình trong PDF (`Win + Shift + S`) rồi bấm **Ctrl + V** để dán, hoặc kéo thả hay chọn file ảnh. Khi thi, ảnh hiện ở đúng chỗ như trên Bluebook.
+- Trong file TXT: ghi dòng `Image: cau12.png` rồi chọn file ảnh **cùng lúc** với file .txt khi tải lên. Dòng `Figure: <mô tả>` ghi lại là câu này cần hình.
+- Câu có mô tả hình mà chưa gắn ảnh sẽ có nhãn **⚠ Thiếu hình**. Dùng bộ lọc "Thiếu hình" để tìm các câu còn phải dán ảnh.
+- Ảnh được lưu trong `data/images/`.
+
 **AI kiểm tra đáp án** (cho file có đáp án sai)
 - Bấm **🔍 AI kiểm tra đáp án** trong Ngân hàng đề, hoặc tick "Sau khi tải, cho AI giải lại…" lúc tải file lên.
 - AI giải lại từng câu ở mức suy nghĩ cao nhất và **không được xem đáp án trong file**, để không bị đáp án sai dẫn dắt.

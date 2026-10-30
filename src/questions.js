@@ -119,6 +119,8 @@ const QUESTION_RE = /^\s*(?:question|câu hỏi|prompt)\s*[:\-–]\s*(.*)$/i;
 const DIFF_RE = /^\s*(?:difficulty|độ khó|do kho|level)\s*[:\-–]\s*(.+)$/i;
 const SECTION_RE = /^\s*(?:section|phần|phan)\s*[:\-–]\s*(.+)$/i;
 const DOMAIN_RE = /^\s*(?:domain|skill|dạng)\s*[:\-–]\s*(.+)$/i;
+const FIGURE_RE = /^\s*(?:figure|hình vẽ|mô tả hình)\s*[:\-–]\s*(.+)$/i;
+const IMAGE_RE = /^\s*(?:image|ảnh|hình ảnh)\s*[:\-–]\s*(\S+)\s*$/i;
 
 function parseBlock(header, body, defaults) {
   const raw = { choices: [] };
@@ -139,6 +141,8 @@ function parseBlock(header, body, defaults) {
     if ((m = line.match(DIFF_RE))) { raw.difficulty = m[1]; continue; }
     if ((m = line.match(SECTION_RE))) { raw.section = m[1]; continue; }
     if ((m = line.match(DOMAIN_RE))) { raw.domain = m[1]; continue; }
+    if ((m = line.match(IMAGE_RE))) { raw.image = m[1]; continue; }
+    if ((m = line.match(FIGURE_RE))) { raw.figure = m[1]; continue; }
     if ((m = line.match(PASSAGE_RE))) { passage.push(m[1]); mode = "passage"; continue; }
     if ((m = line.match(QUESTION_RE))) { prompt.push(m[1]); mode = "prompt"; sawQuestionLabel = true; continue; }
     if (mode !== "expl" && mode !== "after" && (m = line.match(CHOICE_RE))) {
@@ -189,6 +193,11 @@ export function parseStructuredText(text, defaults = {}) {
   }
   if (current) blocks.push(current);
   return blocks.map((b) => parseBlock(b.header, b.body.join("\n"), defaults)).filter(Boolean);
+}
+
+// Câu cần hình (có mô tả hình) nhưng chưa gắn ảnh thật.
+export function missingImage(q) {
+  return Boolean(q.figure) && !q.image;
 }
 
 export function publicQuestion(q) {

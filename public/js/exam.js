@@ -248,6 +248,13 @@ const SPR_DIRECTIONS = `<div class="spr-dir"><h3 style="margin-top:0">Student-pr
 <tr><td>2/3</td><td>2/3 · .6666 · .6667 · 0.666 · 0.667</td><td>0.66 · .66 · 0.67 · .67</td></tr>
 <tr><td>−1/3</td><td>−1/3 · −.3333 · −0.333</td><td>−.33 · −0.33</td></tr></table></div>`;
 
+// Hình của câu hỏi: ưu tiên ảnh thật; chưa có ảnh thì hiện phần mô tả hình bằng chữ.
+function figureHtml(q) {
+  if (q.image) return `<div class="figure-box figure-img"><img src="${esc(q.image)}" alt="Figure" /></div>`;
+  if (q.figure) return `<div class="figure-box"><b>Figure:</b> ${rich(q.figure)}</div>`;
+  return "";
+}
+
 function questionPanel(q) {
   const crossed = S.crossed[q.id] || [];
   const elim = S.elimOn;
@@ -274,8 +281,7 @@ function questionPanel(q) {
       <button class="mark-btn ${S.marked[q.id] ? "on" : ""}" data-act="mark"><span class="flag">🔖</span> Mark for Review</button>
       ${q.type === "mcq" ? `<button class="elim-btn ${elim ? "on" : ""}" data-act="elim" title="Answer eliminator">ABC</button>` : ""}
     </div>
-    ${mod().section === "math" && q.figure ? `<div class="figure-box"><b>Figure:</b> ${rich(q.figure)}</div>` : ""}
-    ${q.image ? `<div class="figure-box"><img src="${esc(q.image)}" alt="figure" /></div>` : ""}
+    ${mod().section === "math" ? figureHtml(q) : ""}
     <div class="qprompt hl-area" data-hl="prompt">${hl.prompt ?? rich(q.prompt)}</div>
     ${body}`;
 }
@@ -297,9 +303,9 @@ function renderExam() {
     const q = question();
     const hl = S.hl[q.id] || {};
     const isRw = m.section === "rw";
-    if (isRw && (q.passage || q.figure)) {
+    if (isRw && (q.passage || q.figure || q.image)) {
       main = `<div class="pane left"><div class="passage hl-area" data-hl="passage">
-          ${q.figure ? `<div class="figure-box"><b>Figure:</b> ${rich(q.figure)}</div>` : ""}${hl.passage ?? rich(q.passage)}</div></div>
+          ${figureHtml(q)}${hl.passage ?? rich(q.passage)}</div></div>
         <div class="divider"></div><div class="pane right">${questionPanel(q)}</div>`;
     } else if (q.type === "spr") {
       main = `<div class="pane left">${SPR_DIRECTIONS}</div><div class="divider"></div><div class="pane right">${questionPanel(q)}</div>`;

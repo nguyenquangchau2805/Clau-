@@ -82,12 +82,12 @@
     <div class="grid two">
       <section class="card">
         <h2>Tải đề lên</h2>
-        <p class="sub">Hỗ trợ PDF, Word (.docx), TXT/MD, JSON. Có thể chọn nhiều file.</p>
+        <p class="sub">Hỗ trợ PDF, Word (.docx), TXT/MD, JSON. Có thể chọn nhiều file, kể cả ảnh hình vẽ đi kèm (xem dòng <span class="mono">Image:</span> ở khung bên phải).</p>
         <div class="dropzone" id="dropzone">
           <div style="font-size:30px">📄</div>
           <div><b>Bấm để chọn file</b> hoặc kéo thả vào đây</div>
           <div class="muted" style="font-size:13px" id="fileNames">PDF · DOCX · TXT · JSON</div>
-          <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt,.md,.json" hidden />
+          <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt,.md,.json,.png,.jpg,.jpeg,.gif,.webp" hidden />
         </div>
         <div class="row" style="margin-top:12px">
           <div class="field" style="flex:1">
@@ -122,7 +122,14 @@ Explanation: "ingenious" khớp với ý cân bằng...
 
 ### Math | medium | Algebra
 Question: If $3x + 5 = 20$, what is $x$?
+Answer: 5
+
+### Math | hard | Advanced Math
+Figure: Parabola mở xuống, đỉnh (2, 5)
+Image: cau12.png
+Question: The graph of $y = f(x)$ is shown. ...
 Answer: 5</pre>
+        <p class="sub" style="margin-top:6px">Câu có hình: ghi <span class="mono">Image: tên-ảnh.png</span> rồi chọn file ảnh <b>cùng lúc</b> với file .txt khi tải lên. Hoặc chỉ ghi <span class="mono">Figure:</span> (mô tả) rồi dán ảnh sau trong Ngân hàng đề.</p>
         <div class="row">
           <a class="btn small" href="/sample/sample-bank.json" download>Tải file mẫu JSON</a>
           <a class="btn small" href="/sample/sample-format.txt" download>Tải file mẫu TXT</a>
@@ -155,8 +162,10 @@ Answer: 5</pre>
         </div>
       </div>
       <div id="verifyMsg"></div>
+      <div id="figureMsg"></div>
       <div class="row" style="margin-bottom:12px">
         <select class="input" id="fVerify" style="width:auto"><option value="">Mọi trạng thái đáp án</option><option value="mismatch">⚠ Nghi sai đáp án</option><option value="ok">✓ AI đã xác nhận</option><option value="unchecked">Chưa kiểm tra</option></select>
+        <select class="input" id="fFigure" style="width:auto"><option value="">Mọi câu (hình)</option><option value="missing">⚠ Thiếu hình</option><option value="has">🖼 Có hình</option></select>
         <select class="input" id="fSection" style="width:auto"><option value="">Tất cả phần</option><option value="rw">Reading & Writing</option><option value="math">Math</option></select>
         <select class="input" id="fDifficulty" style="width:auto"><option value="">Mọi độ khó</option><option value="easy">Dễ</option><option value="medium">Trung bình</option><option value="hard">Khó</option></select>
         <select class="input" id="fSource" style="width:auto"><option value="">Mọi nguồn</option></select>
