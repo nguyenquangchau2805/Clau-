@@ -183,7 +183,7 @@ export function parseStructuredText(text, defaults = {}) {
       if (current) blocks.push(current);
       current = { header: m[1] ?? "", body: m[3] ? [m[3]] : [] };
     } else if (current) {
-      if (/^\s*-{3,}\s*$/.test(line)) continue;
+      if (/^\s*-{3,}\s*$/.test(line) || /^\s*```/.test(line)) continue;
       current.body.push(line);
     }
   }

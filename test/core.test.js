@@ -59,3 +59,9 @@ test("spr answers accept equivalent forms and scoring is bounded", () => {
   assert.equal(scoreTest(t, all).total, 1600);
   assert.equal(scoreTest(t, {}).total, 400);
 });
+
+test("text pasted from a chat code block ignores the fences", () => {
+  const qs = parseStructuredText("```\n### Math | hard | Algebra\nQuestion: If $x+1=3$, what is $x$?\nAnswer: 2\nExplanation: x = 2\n```\n");
+  assert.equal(qs.length, 1);
+  assert.equal(qs[0].explanation, "x = 2");
+});

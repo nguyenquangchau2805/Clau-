@@ -128,6 +128,20 @@ Answer: 5</pre>
           <a class="btn small" href="/sample/sample-format.txt" download>Tải file mẫu TXT</a>
           <button class="btn small" id="btnLoadSample">Nạp bộ câu mẫu</button>
         </div>
+        <div class="notice ok" style="margin-top:16px;color:var(--text)">
+          <b>💡 Chuyển đề PDF sang định dạng mẫu miễn phí</b>
+          <ol style="margin:6px 0 10px;padding-left:20px;font-size:14px">
+            <li>Bấm nút bên dưới để sao chép lời nhắn (prompt).</li>
+            <li>Mở claude.ai (bản miễn phí), dán prompt, rồi dán chữ của khoảng 10–15 câu từ PDF vào cuối.</li>
+            <li>Copy kết quả, dán nối vào một file <span class="mono">.txt</span>, lặp lại cho các câu tiếp theo.</li>
+            <li>Tải file .txt lên ở khung bên trái và <b>bỏ tick "Dùng AI đọc đề"</b>, như vậy không tốn tiền API.</li>
+          </ol>
+          <div class="row">
+            <button class="btn small primary" id="btnCopyPrompt">📋 Sao chép prompt chuyển đề</button>
+            <a class="btn small" href="https://claude.ai/new" target="_blank" rel="noopener">Mở claude.ai ↗</a>
+            <span id="copyMsg" class="muted" style="font-size:13px"></span>
+          </div>
+        </div>
       </section>
     </div>
 

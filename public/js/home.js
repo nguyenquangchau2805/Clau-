@@ -122,6 +122,55 @@ async function uploadFiles(files, { useAI = $("#upAi").checked } = {}) {
   loadBank(true);
 }
 $("#btnUpload").onclick = () => uploadFiles(pickedFiles);
+// Prompt để học sinh tự chuyển đề sang định dạng mẫu bằng claude.ai miễn phí (không tốn API).
+const CONVERT_PROMPT = `Chuyển các câu SAT mình dán ở cuối sang ĐÚNG định dạng dưới đây. Giữ nguyên từng chữ của đề, không tóm tắt, không thêm bớt. Chỉ trả về phần đã chuyển, đặt trong một khối code để mình copy.
+
+### RW | <easy/medium/hard> | <domain>
+Passage: <đoạn văn bên trái; nếu có Text 1 / Text 2 thì giữ nguyên các dòng "Text 1", "Text 2">
+Question: <câu hỏi>
+A) ...
+B) ...
+C) ...
+D) ...
+Answer: <chữ cái A-D>
+Explanation: <giải thích ngắn bằng tiếng Việt>
+
+Quy tắc:
+- Mỗi câu bắt đầu bằng một dòng "###". Phần ghi RW (Reading and Writing) hoặc Math.
+- Domain RW: Craft and Structure, Information and Ideas, Standard English Conventions, Expression of Ideas.
+- Domain Math: Algebra, Advanced Math, Problem-Solving and Data Analysis, Geometry and Trigonometry.
+- Math: công thức viết LaTeX trong $...$ (ví dụ $\\frac{3}{4}x + 2 = 5$). Câu Math không có đáp án A-D thì bỏ các dòng A-D, chỉ ghi "Answer:"; nếu có nhiều cách ghi đúng thì ngăn bằng dấu | (ví dụ Answer: 2/3 | .6667).
+- Câu có hình/đồ thị: thêm dòng "Passage:" mô tả hình đủ chi tiết để giải (trục, điểm, giá trị).
+- Chỗ trống trong đoạn văn ghi là ______ ; bảng ghi dạng | cột 1 | cột 2 |.
+- Nếu đề có đáp án / answer key thì dùng đáp án đó. Nếu không có thì tự giải thật cẩn thận.
+- Độ khó: dùng nhãn trong đề nếu có, nếu không thì tự đánh giá easy/medium/hard như College Board.
+- Bỏ qua phần hướng dẫn, trang bìa, những thứ không phải câu hỏi.
+
+Đề cần chuyển:
+`;
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    // Trình duyệt không cho dùng clipboard API (vd. mở qua địa chỉ IP trong mạng LAN)
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.append(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  }
+}
+
+$("#btnCopyPrompt").onclick = async () => {
+  await copyText(CONVERT_PROMPT);
+  $("#copyMsg").textContent = "✓ Đã sao chép! Dán vào claude.ai rồi dán đề vào cuối.";
+  setTimeout(() => ($("#copyMsg").textContent = ""), 4000);
+};
+
 $("#btnLoadSample").onclick = async () => {
   const blob = await (await fetch("/sample/sample-bank.json")).blob();
   uploadFiles([new File([blob], "Bộ câu mẫu.json", { type: "application/json" })], { useAI: false });
