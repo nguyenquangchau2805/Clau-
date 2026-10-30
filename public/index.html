@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAT Practice</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23324dc7'/><text x='16' y='22' font-size='14' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>SAT</text></svg>" />
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
+  <script defer src="/vendor/katex/katex.min.js"></script>
+  <script defer src="/vendor/katex/contrib/auto-render.min.js"></script>
+  <script defer src="/vendor/marked/marked.min.js"></script>
+  <script defer src="/vendor/dompurify/purify.min.js"></script>
+  <link rel="stylesheet" href="/css/base.css" />
+</head>
+<body>
+  <header class="topnav">
+    <div class="brand"><div class="logo">SAT</div><span class="txt">SAT Practice</span></div>
+    <nav>
+      <a href="#home" data-view="home">Luyện đề</a>
+      <a href="#bank" data-view="bank">Ngân hàng đề</a>
+      <a href="#history" data-view="history">Lịch sử</a>
+    </nav>
+    <span id="aiStatus" class="pill">AI…</span>
+  </header>
+
+  <!-- ============ LUYỆN ĐỀ ============ -->
+  <main class="container" id="view-home">
+    <div class="grid two">
+      <section class="card hero">
+        <h2 style="font-size:24px">Tạo đề thi thử</h2>
+        <p class="sub">Đề được xào ngẫu nhiên từ ngân hàng câu hỏi bạn đã tải lên. Module 1 trộn dễ/trung bình/khó, <b>Module 2 luôn là module khó</b>.</p>
+        <div class="grid three" style="gap:12px;margin:14px 0">
+          <div class="stat"><b id="cntRw">0</b><span style="color:#dfe4ff">câu Reading & Writing</span></div>
+          <div class="stat"><b id="cntMath">0</b><span style="color:#dfe4ff">câu Math</span></div>
+          <div class="stat"><b id="cntHard">0</b><span style="color:#dfe4ff">câu khó</span></div>
+        </div>
+        <a class="btn" href="#bank">⬆ Tải đề lên</a>
+      </section>
+
+      <section class="card">
+        <h2>Cấu hình bài thi</h2>
+        <div class="field">
+          <span class="label">Phần thi</span>
+          <div class="seg" id="segSections">
+            <button data-v="full" class="on">Full test</button>
+            <button data-v="rw">Reading & Writing</button>
+            <button data-v="math">Math</button>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label">Số câu mỗi module</span>
+          <div class="seg" id="segLength">
+            <button data-v="real" class="on">Như đề thật (27 / 22)</button>
+            <button data-v="short">Ngắn (10)</button>
+            <button data-v="custom">Tuỳ chọn</button>
+          </div>
+          <input id="customCount" class="input hidden" type="number" min="1" max="60" value="15" style="max-width:120px;margin-top:6px" />
+        </div>
+        <label class="check"><input type="checkbox" id="optTimed" checked /> Bấm giờ như thi thật (RW 32 phút, Math 35 phút / module)</label>
+        <label class="check"><input type="checkbox" id="optShuffle" checked /> Đảo thứ tự đáp án A–D</label>
+        <label class="check"><input type="checkbox" id="optAi" /> Chế độ luyện tập: cho phép hỏi AI gợi ý trong lúc làm</label>
+        <div id="startMsg"></div>
+        <button class="btn primary" id="btnStart" style="width:100%;padding:12px">Bắt đầu làm bài →</button>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:20px">
+      <h2>Cấu trúc đề (Digital SAT)</h2>
+      <table class="list">
+        <thead><tr><th>Phần</th><th>Module 1</th><th>Module 2 (luôn khó)</th><th>Thời gian</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag rw">Reading & Writing</span></td><td>27 câu · trộn độ khó</td><td>27 câu · ~70% khó, 30% trung bình</td><td>32 phút / module</td></tr>
+          <tr><td colspan="4" class="muted">Nghỉ giữa giờ 10 phút</td></tr>
+          <tr><td><span class="tag math">Math</span></td><td>22 câu · trộn độ khó</td><td>22 câu · ~70% khó, 30% trung bình</td><td>35 phút / module</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- ============ NGÂN HÀNG ĐỀ ============ -->
+  <main class="container hidden" id="view-bank">
+    <div class="grid two">
+      <section class="card">
+        <h2>Tải đề lên</h2>
+        <p class="sub">Hỗ trợ PDF, Word (.docx), TXT/MD, JSON. Có thể chọn nhiều file.</p>
+        <div class="dropzone" id="dropzone">
+          <div style="font-size:30px">📄</div>
+          <div><b>Bấm để chọn file</b> hoặc kéo thả vào đây</div>
+          <div class="muted" style="font-size:13px" id="fileNames">PDF · DOCX · TXT · JSON</div>
+          <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt,.md,.json" hidden />
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div class="field" style="flex:1">
+            <label>Phần (nếu file chỉ có 1 phần)</label>
+            <select class="input" id="upSection"><option value="">Tự nhận diện</option><option value="rw">Reading & Writing</option><option value="math">Math</option></select>
+          </div>
+          <div class="field" style="flex:1">
+            <label>Độ khó mặc định</label>
+            <select class="input" id="upDifficulty"><option value="">Tự nhận diện / AI đánh giá</option><option value="easy">Dễ</option><option value="medium">Trung bình</option><option value="hard">Khó</option></select>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="upAi" checked /> Dùng AI đọc đề (PDF scan, đề không theo mẫu, tự giải nếu thiếu đáp án)</label>
+        <button class="btn primary" id="btnUpload" disabled>Tải lên & đọc đề</button>
+        <div id="uploadMsg"></div>
+      </section>
+
+      <section class="card">
+        <h2>Định dạng file không cần AI</h2>
+        <p class="sub">Mỗi câu bắt đầu bằng <span class="mono">###</span> kèm phần | độ khó | domain. Câu tự luận (Math SPR) thì bỏ các dòng A–D.</p>
+        <pre class="sample">### RW | hard | Craft and Structure
+Passage: The architect's design was ______: it
+balanced bold forms with practical needs.
+Question: Which choice completes the text with
+the most logical and precise word or phrase?
+A) arbitrary
+B) ingenious
+C) fragile
+D) redundant
+Answer: B
+Explanation: "ingenious" khớp với ý cân bằng...
+
+### Math | medium | Algebra
+Question: If $3x + 5 = 20$, what is $x$?
+Answer: 5</pre>
+        <div class="row">
+          <a class="btn small" href="/sample/sample-bank.json" download>Tải file mẫu JSON</a>
+          <a class="btn small" href="/sample/sample-format.txt" download>Tải file mẫu TXT</a>
+          <button class="btn small" id="btnLoadSample">Nạp bộ câu mẫu</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:20px">
+      <div class="row between" style="margin-bottom:12px">
+        <h2 style="margin:0">Câu hỏi trong ngân hàng <span class="muted" id="bankTotal"></span></h2>
+        <div class="row">
+          <a class="btn small" href="/api/questions/export">⬇ Xuất JSON</a>
+          <button class="btn small danger" id="btnClear">Xoá theo bộ lọc nguồn</button>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom:12px">
+        <select class="input" id="fSection" style="width:auto"><option value="">Tất cả phần</option><option value="rw">Reading & Writing</option><option value="math">Math</option></select>
+        <select class="input" id="fDifficulty" style="width:auto"><option value="">Mọi độ khó</option><option value="easy">Dễ</option><option value="medium">Trung bình</option><option value="hard">Khó</option></select>
+        <select class="input" id="fSource" style="width:auto"><option value="">Mọi nguồn</option></select>
+        <input class="input" id="fQuery" placeholder="Tìm nội dung…" style="flex:1;min-width:160px" />
+      </div>
+      <div style="overflow:auto">
+        <table class="list">
+          <thead><tr><th>Phần</th><th>Độ khó</th><th>Câu hỏi</th><th>Đáp án</th><th></th></tr></thead>
+          <tbody id="bankRows"></tbody>
+        </table>
+      </div>
+      <div id="bankMore" class="row hidden" style="justify-content:center;margin-top:10px"><button class="btn small">Xem thêm</button></div>
+    </section>
+  </main>
+
+  <!-- ============ LỊCH SỬ ============ -->
+  <main class="container hidden" id="view-history">
+    <section class="card">
+      <h2>Lịch sử làm bài</h2>
+      <div id="historyList"></div>
+    </section>
+  </main>
+
+  <div id="modalRoot"></div>
+  <script type="module" src="/js/home.js"></script>
+</body>
+</html>

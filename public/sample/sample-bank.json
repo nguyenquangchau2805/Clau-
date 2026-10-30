@@ -1,0 +1,844 @@
+{
+  "questions": [
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Craft and Structure",
+      "passage": "Marine biologist Ayana Johnson argues that coastal communities should be ______ in decisions about ocean conservation, since they depend most directly on healthy seas.",
+      "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+      "choices": [
+        "excluded",
+        "involved",
+        "confused",
+        "delayed"
+      ],
+      "answer": "B",
+      "explanation": "Vế sau (họ phụ thuộc trực tiếp vào biển) là lý do để họ được THAM GIA quyết định → involved.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Standard English Conventions",
+      "passage": "The museum's newest exhibit features more than two hundred ______ from the Bronze Age, many of which have never been displayed publicly.",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "artifacts",
+        "artifact's",
+        "artifacts'",
+        "artifact"
+      ],
+      "answer": "A",
+      "explanation": "Cần danh từ số nhiều (\"two hundred\"), không sở hữu → artifacts.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Expression of Ideas",
+      "passage": "Honeybees communicate the location of food through a \"waggle dance.\" ______ the angle of the dance indicates the direction of the food relative to the sun.",
+      "prompt": "Which choice completes the text with the most logical transition?",
+      "choices": [
+        "Specifically,",
+        "However,",
+        "Instead,",
+        "Nevertheless,"
+      ],
+      "answer": "A",
+      "explanation": "Câu sau nêu chi tiết cụ thể cho câu trước → Specifically.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Information and Ideas",
+      "passage": "Researchers in Chicago found that neighborhoods with community gardens recorded summer temperatures up to 2°C lower than nearby neighborhoods without them. The plants' shade and the evaporation of water from soil and leaves both contribute to the cooling effect.",
+      "prompt": "Which choice best states the main idea of the text?",
+      "choices": [
+        "Community gardens can help lower local temperatures.",
+        "Chicago has hotter summers than most other cities.",
+        "Evaporation is the only cause of cooling in cities.",
+        "Most residents prefer neighborhoods with gardens."
+      ],
+      "answer": "A",
+      "explanation": "Cả đoạn nói vườn cộng đồng làm giảm nhiệt độ khu vực. C sai vì đoạn nói có 2 nguyên nhân.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Standard English Conventions",
+      "passage": "The collection of letters written by the poet ______ valuable insight into her early career.",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "has provided",
+        "have provided",
+        "are providing",
+        "were providing"
+      ],
+      "answer": "A",
+      "explanation": "Chủ ngữ chính là \"The collection\" (số ít) → has provided.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Craft and Structure",
+      "passage": "The scientist was known for her ______ approach: she double-checked every measurement before reporting a result.",
+      "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+      "choices": [
+        "careless",
+        "meticulous",
+        "hasty",
+        "indifferent"
+      ],
+      "answer": "B",
+      "explanation": "Kiểm tra lại mọi phép đo → tỉ mỉ (meticulous).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Standard English Conventions",
+      "passage": "Mount Kilimanjaro, the tallest mountain in ______ rises about 5,895 meters above sea level.",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "Africa,",
+        "Africa",
+        "Africa;",
+        "Africa:"
+      ],
+      "answer": "A",
+      "explanation": "Cụm đồng vị \"the tallest mountain in Africa\" được mở bằng dấu phẩy nên phải đóng bằng dấu phẩy.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Craft and Structure",
+      "passage": "Many people assume that deserts are nearly lifeless. In fact, the Sonoran Desert supports more than 2,000 species of plants, as well as hundreds of species of birds, reptiles, and mammals.",
+      "prompt": "Which choice best describes the function of the second sentence in the overall structure of the text?",
+      "choices": [
+        "It challenges an assumption presented in the first sentence.",
+        "It provides an example that supports the first sentence.",
+        "It introduces a topic unrelated to the first sentence.",
+        "It summarizes a debate among scientists."
+      ],
+      "answer": "A",
+      "explanation": "\"In fact\" + dữ liệu về đa dạng sinh học bác bỏ giả định \"sa mạc gần như không có sự sống\".",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Expression of Ideas",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Great Wall of China is a series of fortifications.\n• Construction began as early as the 7th century BCE.\n• Its total length is about 21,196 kilometers.",
+      "prompt": "The student wants to emphasize the length of the Great Wall. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "choices": [
+        "The Great Wall of China, a series of fortifications, stretches about 21,196 kilometers in total.",
+        "Construction on the Great Wall began as early as the 7th century BCE.",
+        "The Great Wall of China is a series of fortifications.",
+        "Fortifications were built in China starting in the 7th century BCE."
+      ],
+      "answer": "A",
+      "explanation": "Chỉ A nhắc đến chiều dài 21,196 km.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "easy",
+      "domain": "Information and Ideas",
+      "passage": "A student studied the relationship between sleep and test performance. Students who slept 8 hours scored an average of 85 points, students who slept 6 hours scored 78 points, and students who slept 4 hours scored 70 points. The data suggest that students who sleep more tend to ______",
+      "prompt": "Which choice most effectively uses data from the study to complete the statement?",
+      "choices": [
+        "score higher on tests.",
+        "score lower on tests.",
+        "study for fewer hours.",
+        "take tests more quickly."
+      ],
+      "answer": "A",
+      "explanation": "Ngủ càng nhiều điểm càng cao (70 → 78 → 85).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Craft and Structure",
+      "passage": "In her review, the critic described the film's plot as ______: although it seemed simple at first, its many subplots and sudden reversals demanded close attention from viewers.",
+      "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+      "choices": [
+        "convoluted",
+        "predictable",
+        "brief",
+        "lighthearted"
+      ],
+      "answer": "A",
+      "explanation": "Nhiều tình tiết phụ và đảo chiều → phức tạp, rắc rối (convoluted).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Standard English Conventions",
+      "passage": "Researchers have long debated why some songbirds migrate at night. One hypothesis holds that cooler nighttime air helps birds conserve ______ another suggests that darkness offers protection from predators.",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "water;",
+        "water,",
+        "water",
+        "water and"
+      ],
+      "answer": "A",
+      "explanation": "Hai mệnh đề độc lập → nối bằng dấu chấm phẩy. Dấu phẩy đơn thuần tạo comma splice.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Expression of Ideas",
+      "passage": "Early electric cars were popular in the 1900s, accounting for about a third of vehicles in some U.S. cities. ______ the mass production of cheaper gasoline-powered cars soon pushed electric models off the market.",
+      "prompt": "Which choice completes the text with the most logical transition?",
+      "choices": [
+        "Similarly,",
+        "For example,",
+        "However,",
+        "Therefore,"
+      ],
+      "answer": "C",
+      "explanation": "Từ \"phổ biến\" chuyển sang \"bị đẩy khỏi thị trường\" → đối lập → However.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Information and Ideas",
+      "passage": "Archaeologists excavating a coastal site in Peru found large quantities of fish bones and fishing nets but almost no remains of crops or farming tools, even though the site's soil is fertile. These findings suggest that the site's inhabitants ______",
+      "prompt": "Which choice most logically completes the text?",
+      "choices": [
+        "relied primarily on the sea, rather than on agriculture, for food.",
+        "did not know how to make fishing nets.",
+        "abandoned the site because the soil was poor.",
+        "traded fish for crops with nearby farming communities."
+      ],
+      "answer": "A",
+      "explanation": "Nhiều xương cá, gần như không có dấu vết nông nghiệp dù đất màu mỡ → sống chủ yếu nhờ biển. D không có bằng chứng.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Standard English Conventions",
+      "passage": "By the time the expedition reached the summit, the team ______ for nearly eighteen hours without rest.",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "climbs",
+        "will climb",
+        "had been climbing",
+        "is climbing"
+      ],
+      "answer": "C",
+      "explanation": "Hành động kéo dài trước một mốc trong quá khứ (\"By the time ... reached\") → quá khứ hoàn thành tiếp diễn.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Craft and Structure",
+      "passage": "Text 1\nSome economists argue that remote work reduces productivity because employees lose the informal exchanges of ideas that happen in shared offices.\n\nText 2\nA 2023 study of more than 10,000 software engineers found that those working remotely completed slightly more tasks than their in-office peers, though they reported fewer spontaneous collaborations.",
+      "prompt": "Based on the texts, how would the author of Text 2 most likely respond to the economists' argument in Text 1?",
+      "choices": [
+        "By agreeing that remote workers have fewer informal exchanges but noting that, in one study, this did not reduce the number of tasks completed",
+        "By arguing that informal exchanges happen more often among remote workers than among office workers",
+        "By claiming that productivity cannot be meaningfully measured",
+        "By agreeing that remote work clearly reduces productivity"
+      ],
+      "answer": "A",
+      "explanation": "Text 2 thừa nhận ít hợp tác tự phát hơn, nhưng người làm từ xa vẫn hoàn thành nhiều việc hơn.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Expression of Ideas",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Zora Neale Hurston was an author and anthropologist.\n• She studied folklore in the American South and the Caribbean.\n• Her novel Their Eyes Were Watching God was published in 1937.\n• Her anthropological research influenced the dialogue in her fiction.",
+      "prompt": "The student wants to explain how Hurston's research related to her writing. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "choices": [
+        "Hurston's study of folklore in the American South and the Caribbean influenced the dialogue in her fiction.",
+        "Their Eyes Were Watching God was published in 1937.",
+        "Zora Neale Hurston was both an author and an anthropologist.",
+        "Hurston studied folklore in two regions: the American South and the Caribbean."
+      ],
+      "answer": "A",
+      "explanation": "Chỉ A nối nghiên cứu (folklore) với tác phẩm (dialogue).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Standard English Conventions",
+      "passage": "The city council voted to expand ______ recycling program, which had already reduced landfill waste by 30 percent.",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "its",
+        "it's",
+        "their",
+        "its'"
+      ],
+      "answer": "A",
+      "explanation": "\"The city council\" là danh từ tập hợp số ít → đại từ sở hữu its. \"it's\" = it is.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Information and Ideas",
+      "passage": "Researchers measured the average number of pollinator visits per hour to two types of flowers in suburban gardens. Native wildflowers received 42 visits per hour, while ornamental hybrids received 11. The researchers concluded that planting native species could help support local pollinator populations.",
+      "prompt": "Which choice best describes data from the text that support the researchers' conclusion?",
+      "choices": [
+        "Native wildflowers received nearly four times as many pollinator visits per hour as ornamental hybrids did.",
+        "Ornamental hybrids received 11 pollinator visits per hour.",
+        "Both types of flowers received at least some pollinator visits.",
+        "Pollinators visited each flower for less than an hour."
+      ],
+      "answer": "A",
+      "explanation": "So sánh 42 vs 11 (gần gấp 4) mới ủng hộ kết luận trồng hoa bản địa.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "medium",
+      "domain": "Craft and Structure",
+      "passage": "The diplomat's remarks were deliberately ______, allowing both sides in the dispute to interpret them as support for their own positions.",
+      "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+      "choices": [
+        "ambiguous",
+        "hostile",
+        "explicit",
+        "brief"
+      ],
+      "answer": "A",
+      "explanation": "Hai bên hiểu theo hai cách khác nhau → mơ hồ (ambiguous).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Craft and Structure",
+      "passage": "Although critics initially dismissed the composer's experimental pieces as mere novelties, later generations came to regard them as ______ works that anticipated major developments in twentieth-century music.",
+      "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+      "choices": [
+        "derivative",
+        "prescient",
+        "ephemeral",
+        "prosaic"
+      ],
+      "answer": "B",
+      "explanation": "\"anticipated major developments\" → đi trước thời đại, có tầm nhìn (prescient).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Craft and Structure",
+      "passage": "Biologist Lynn Margulis's theory of endosymbiosis was at first met with skepticism, but accumulating genetic evidence eventually ______ her claim that mitochondria descended from free-living bacteria.",
+      "prompt": "Which choice completes the text with the most logical and precise word or phrase?",
+      "choices": [
+        "undermined",
+        "vindicated",
+        "obscured",
+        "anticipated"
+      ],
+      "answer": "B",
+      "explanation": "\"at first ... skepticism, but ... evidence eventually\" → bằng chứng chứng minh bà đúng (vindicated).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Standard English Conventions",
+      "passage": "The novelist's papers, which include early drafts, personal correspondence, and ______ were donated to the university library in 2019.",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "notebooks,",
+        "notebooks",
+        "notebooks;",
+        "notebooks—"
+      ],
+      "answer": "A",
+      "explanation": "Mệnh đề không xác định \"which include ...\" mở bằng dấu phẩy nên phải đóng bằng dấu phẩy trước động từ chính \"were donated\".",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Standard English Conventions",
+      "passage": "Having analyzed thousands of satellite images taken over two decades, ______",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "the team concluded that the glacier was retreating faster than predicted.",
+        "the glacier was found by the team to be retreating faster than predicted.",
+        "it was concluded by the team that the glacier was retreating faster than predicted.",
+        "the team's conclusion was that the glacier was retreating faster than predicted."
+      ],
+      "answer": "A",
+      "explanation": "Chủ thể \"đã phân tích ảnh\" phải đứng ngay sau dấu phẩy → the team (tránh dangling modifier).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Information and Ideas",
+      "passage": "In a study of consumer decision-making, shoppers at a tasting booth were offered either 6 or 24 varieties of jam. The larger display attracted more visitors, yet only 3 percent of those visitors bought jam, compared with 30 percent of visitors to the smaller display. The researchers suggested that ______",
+      "prompt": "Which choice most logically completes the text?",
+      "choices": [
+        "although a wide range of options may attract attention, it can also make people less likely to make a choice.",
+        "people generally dislike jam when many flavors are available.",
+        "smaller displays attract more visitors than larger displays do.",
+        "visitors to the larger display had already purchased jam elsewhere."
+      ],
+      "answer": "A",
+      "explanation": "Nhiều lựa chọn thu hút người xem nhưng tỉ lệ mua thấp hơn hẳn → quá nhiều lựa chọn làm khó quyết định.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Craft and Structure",
+      "passage": "Text 1\nMany historians have credited the printing press with rapidly spreading literacy across Europe in the fifteenth century.\n\nText 2\nLiteracy rates in much of Europe remained low for nearly two centuries after the printing press was introduced. The spread of reading depended as much on expanding schooling and cheaper paper as on the press itself.",
+      "prompt": "Based on the texts, how would the author of Text 2 most likely respond to the historians' claim in Text 1?",
+      "choices": [
+        "By suggesting that the claim overstates how quickly the press affected literacy and overlooks other contributing factors",
+        "By agreeing that the printing press was the sole cause of rising literacy",
+        "By arguing that the printing press had no effect on literacy at all",
+        "By claiming that schooling declined after the press was introduced"
+      ],
+      "answer": "A",
+      "explanation": "Text 2 phản bác chữ \"rapidly\" (2 thế kỷ vẫn thấp) và bổ sung yếu tố khác (trường học, giấy rẻ). C quá cực đoan.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Expression of Ideas",
+      "passage": "The Arctic tern migrates farther than any other bird, traveling roughly 70,000 kilometers each year. ______ because terns can live for 30 years or more, a single bird may travel a distance equivalent to three round trips to the Moon over its lifetime.",
+      "prompt": "Which choice completes the text with the most logical transition?",
+      "choices": [
+        "In contrast,",
+        "Moreover,",
+        "Instead,",
+        "Nonetheless,"
+      ],
+      "answer": "B",
+      "explanation": "Câu sau bổ sung thêm một thông tin ấn tượng cùng chiều → Moreover.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Craft and Structure",
+      "passage": "The following text is from Jane Austen's 1813 novel Pride and Prejudice.\n\nIt is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife. However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.",
+      "prompt": "Which choice best describes the function of the second sentence in the text as a whole?",
+      "choices": [
+        "It reveals that the \"truth\" stated in the first sentence reflects the assumptions of neighboring families rather than the man's own wishes.",
+        "It provides evidence that the man described is actively searching for a wife.",
+        "It contradicts the first sentence by stating that wealthy men avoid marriage.",
+        "It describes the physical setting in which the novel takes place."
+      ],
+      "answer": "A",
+      "explanation": "\"However little known the feelings ... of such a man\" → \"chân lý\" thực ra là suy nghĩ của các gia đình xung quanh — giọng mỉa mai.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Standard English Conventions",
+      "passage": "The researchers identified the two factors most responsible for the decline in the frog ______ habitat loss and a fungal disease known as chytridiomycosis.",
+      "prompt": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "choices": [
+        "population:",
+        "population,",
+        "population;",
+        "population, which were"
+      ],
+      "answer": "A",
+      "explanation": "Mệnh đề độc lập trước, sau đó liệt kê/giải thích → dùng dấu hai chấm.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "rw",
+      "difficulty": "hard",
+      "domain": "Information and Ideas",
+      "passage": "Historians claim that the ancient city of Petra's sophisticated water system allowed it to support a large population despite its desert climate.",
+      "prompt": "Which finding, if true, would most directly support the historians' claim?",
+      "choices": [
+        "Excavations revealed channels, cisterns, and dams capable of storing millions of liters of water, along with housing for roughly 20,000 residents.",
+        "Petra's buildings were carved directly into sandstone cliffs.",
+        "Petra was an important stop on regional trade routes.",
+        "The region around Petra receives less than 15 centimeters of rain per year today."
+      ],
+      "answer": "A",
+      "explanation": "A cho thấy cả hệ thống trữ nước lớn lẫn dân số đông — đúng hai ý của luận điểm.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "easy",
+      "domain": "Algebra",
+      "type": "mcq",
+      "prompt": "If $3x + 7 = 22$, what is the value of $x$?",
+      "choices": [
+        "3",
+        "5",
+        "7",
+        "15"
+      ],
+      "answer": "B",
+      "explanation": "$3x = 15 \\Rightarrow x = 5$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "easy",
+      "domain": "Geometry and Trigonometry",
+      "type": "spr",
+      "prompt": "A rectangle has a length of 12 centimeters and a width of 5 centimeters. What is the area, in square centimeters, of the rectangle?",
+      "choices": [],
+      "answer": "60",
+      "explanation": "$A = 12 \\times 5 = 60$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "easy",
+      "domain": "Advanced Math",
+      "type": "mcq",
+      "prompt": "The function $f$ is defined by $f(x) = 2x^2 - 3$. What is the value of $f(4)$?",
+      "choices": [
+        "13",
+        "29",
+        "32",
+        "61"
+      ],
+      "answer": "B",
+      "explanation": "$f(4) = 2(16) - 3 = 29$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "easy",
+      "domain": "Problem-Solving and Data Analysis",
+      "type": "mcq",
+      "prompt": "A shirt that originally costs $\\$40$ is on sale for 25% off. What is the sale price of the shirt?",
+      "choices": [
+        "$\\$10$",
+        "$\\$15$",
+        "$\\$30$",
+        "$\\$35$"
+      ],
+      "answer": "C",
+      "explanation": "Giảm $0.25 \\times 40 = 10$, giá còn $30$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "easy",
+      "domain": "Algebra",
+      "type": "mcq",
+      "prompt": "A line in the $xy$-plane passes through the points $(0, 3)$ and $(2, 7)$. What is the slope of the line?",
+      "choices": [
+        "$2$",
+        "$3$",
+        "$4$",
+        "$\\frac{1}{2}$"
+      ],
+      "answer": "A",
+      "explanation": "$m = \\frac{7-3}{2-0} = 2$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "easy",
+      "domain": "Problem-Solving and Data Analysis",
+      "type": "spr",
+      "prompt": "What is the mean of the data set $4, 8, 10, 14$?",
+      "choices": [],
+      "answer": "9",
+      "explanation": "$(4+8+10+14)/4 = 36/4 = 9$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "easy",
+      "domain": "Algebra",
+      "type": "mcq",
+      "prompt": "Which expression is equivalent to $3(x + 4) - 2x$?",
+      "choices": [
+        "$x + 4$",
+        "$x + 12$",
+        "$5x + 12$",
+        "$x + 7$"
+      ],
+      "answer": "B",
+      "explanation": "$3x + 12 - 2x = x + 12$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "easy",
+      "domain": "Geometry and Trigonometry",
+      "type": "mcq",
+      "prompt": "Two angles of a triangle measure $50^\\circ$ and $60^\\circ$. What is the measure of the third angle?",
+      "choices": [
+        "$60^\\circ$",
+        "$70^\\circ$",
+        "$80^\\circ$",
+        "$90^\\circ$"
+      ],
+      "answer": "B",
+      "explanation": "$180 - 50 - 60 = 70$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "medium",
+      "domain": "Algebra",
+      "type": "mcq",
+      "prompt": "$$2x + y = 11$$ $$x - y = 1$$ If $(x, y)$ is the solution to the system of equations above, what is the value of $x$?",
+      "choices": [
+        "3",
+        "4",
+        "5",
+        "7"
+      ],
+      "answer": "B",
+      "explanation": "Cộng hai phương trình: $3x = 12 \\Rightarrow x = 4$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "medium",
+      "domain": "Advanced Math",
+      "type": "spr",
+      "prompt": "What is the sum of the solutions to the equation $x^2 - 5x + 6 = 0$?",
+      "choices": [],
+      "answer": "5",
+      "explanation": "$(x-2)(x-3)=0$, nghiệm 2 và 3, tổng = 5 (hoặc dùng Vi-ét: $-b/a = 5$).",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "medium",
+      "domain": "Problem-Solving and Data Analysis",
+      "type": "mcq",
+      "prompt": "A car travels 150 miles in 2.5 hours at a constant speed. At this rate, how many miles will the car travel in 4 hours?",
+      "choices": [
+        "200",
+        "220",
+        "240",
+        "260"
+      ],
+      "answer": "C",
+      "explanation": "Vận tốc $150/2.5 = 60$ mph, $60 \\times 4 = 240$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "medium",
+      "domain": "Geometry and Trigonometry",
+      "type": "mcq",
+      "prompt": "In the $xy$-plane, the graph of $(x - 2)^2 + (y + 3)^2 = 16$ is a circle. What is the radius of the circle?",
+      "choices": [
+        "$2$",
+        "$4$",
+        "$8$",
+        "$16$"
+      ],
+      "answer": "B",
+      "explanation": "$r^2 = 16 \\Rightarrow r = 4$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "medium",
+      "domain": "Advanced Math",
+      "type": "mcq",
+      "prompt": "A population of bacteria doubles every 3 hours. The initial population is 500. Which equation gives the population $P$ after $t$ hours?",
+      "choices": [
+        "$P = 500(2)^{t/3}$",
+        "$P = 500(3)^{t/2}$",
+        "$P = 500 + 2t$",
+        "$P = 500(2)^{3t}$"
+      ],
+      "answer": "A",
+      "explanation": "Gấp đôi sau mỗi 3 giờ → số lần gấp đôi là $t/3$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "medium",
+      "domain": "Algebra",
+      "type": "spr",
+      "prompt": "If $\\frac{x}{4} + \\frac{x}{6} = 5$, what is the value of $x$?",
+      "choices": [],
+      "answer": "12",
+      "explanation": "Nhân 12: $3x + 2x = 60 \\Rightarrow x = 12$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "medium",
+      "domain": "Geometry and Trigonometry",
+      "type": "mcq",
+      "prompt": "In right triangle $ABC$, angle $C$ is a right angle and $\\sin A = \\frac{3}{5}$. What is the value of $\\cos A$?",
+      "choices": [
+        "$\\frac{3}{4}$",
+        "$\\frac{4}{5}$",
+        "$\\frac{5}{4}$",
+        "$\\frac{4}{3}$"
+      ],
+      "answer": "B",
+      "explanation": "Tam giác 3-4-5: $\\cos A = 4/5$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "medium",
+      "domain": "Problem-Solving and Data Analysis",
+      "type": "mcq",
+      "prompt": "A random sample of 200 students at a school with 1,500 students found that 60 of them prefer online classes. Based on the sample, approximately how many students at the school prefer online classes?",
+      "choices": [
+        "60",
+        "300",
+        "450",
+        "600"
+      ],
+      "answer": "C",
+      "explanation": "Tỉ lệ $60/200 = 30\\%$; $0.3 \\times 1500 = 450$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Algebra",
+      "type": "spr",
+      "prompt": "$$3x - ky = 8$$ $$6x - 10y = 5$$ In the system of equations above, $k$ is a constant. For what value of $k$ does the system have no solution?",
+      "choices": [],
+      "answer": "5",
+      "explanation": "Vô nghiệm khi hai đường song song: $\\frac{3}{6} = \\frac{-k}{-10} \\Rightarrow k = 5$, và $\\frac{8}{5} \\ne \\frac{1}{2}$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Advanced Math",
+      "type": "mcq",
+      "prompt": "The equation $x^2 + bx + 16 = 0$, where $b$ is a positive constant, has exactly one real solution. What is the value of $b$?",
+      "choices": [
+        "4",
+        "8",
+        "16",
+        "32"
+      ],
+      "answer": "B",
+      "explanation": "Nghiệm kép khi $\\Delta = b^2 - 64 = 0 \\Rightarrow b = 8$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Advanced Math",
+      "type": "spr",
+      "prompt": "The function $f$ is defined by $f(x) = (x - 3)^2 - 4$. The graph of $y = f(x)$ crosses the $x$-axis at two points. What is the product of the $x$-coordinates of these two points?",
+      "choices": [],
+      "answer": "5",
+      "explanation": "$(x-3)^2 = 4 \\Rightarrow x = 1$ hoặc $x = 5$; tích $= 5$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Problem-Solving and Data Analysis",
+      "type": "mcq",
+      "prompt": "The price of a jacket was increased by 20%. Later, the new price was decreased by 20%. The final price is what percent of the original price?",
+      "choices": [
+        "80%",
+        "96%",
+        "100%",
+        "104%"
+      ],
+      "answer": "B",
+      "explanation": "$1.2 \\times 0.8 = 0.96$ → 96%.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Geometry and Trigonometry",
+      "type": "mcq",
+      "prompt": "A circle in the $xy$-plane has its center at $(0, 0)$ and passes through the point $(5, 12)$. What is the area of the circle?",
+      "choices": [
+        "$13\\pi$",
+        "$26\\pi$",
+        "$144\\pi$",
+        "$169\\pi$"
+      ],
+      "answer": "D",
+      "explanation": "$r = \\sqrt{25 + 144} = 13$; $A = 169\\pi$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Advanced Math",
+      "type": "spr",
+      "prompt": "What is the positive solution to the equation $\\sqrt{2x + 3} = x$?",
+      "choices": [],
+      "answer": "3",
+      "explanation": "Bình phương: $x^2 - 2x - 3 = 0 \\Rightarrow x = 3$ hoặc $x = -1$; loại $-1$ vì căn không âm.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Problem-Solving and Data Analysis",
+      "type": "mcq",
+      "prompt": "The mean of 5 numbers is 20. When a sixth number is added to the list, the mean of the 6 numbers is 22. What is the sixth number?",
+      "choices": [
+        "22",
+        "24",
+        "30",
+        "32"
+      ],
+      "answer": "D",
+      "explanation": "Tổng mới $6 \\times 22 = 132$, tổng cũ $100$ → số thứ sáu là $32$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Advanced Math",
+      "type": "mcq",
+      "prompt": "If $\\frac{x^2 - 9}{x + 3} = 2x - 7$ and $x \\ne -3$, what is the value of $x$?",
+      "choices": [
+        "$-4$",
+        "$1$",
+        "$4$",
+        "$10$"
+      ],
+      "answer": "C",
+      "explanation": "Rút gọn: $x - 3 = 2x - 7 \\Rightarrow x = 4$.",
+      "source": "Bộ câu mẫu"
+    },
+    {
+      "section": "math",
+      "difficulty": "hard",
+      "domain": "Geometry and Trigonometry",
+      "type": "spr",
+      "prompt": "In a right triangle, one of the acute angles is $\\theta$, and $\\tan \\theta = \\frac{5}{12}$. What is the value of $\\sin \\theta$?",
+      "choices": [],
+      "answer": "5/13|.3846|0.3846|.3847|0.3847",
+      "explanation": "Tam giác 5-12-13: $\\sin\\theta = 5/13$.",
+      "source": "Bộ câu mẫu"
+    }
+  ]
+}

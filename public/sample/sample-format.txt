@@ -1,0 +1,46 @@
+Mẫu file văn bản để tải đề lên mà KHÔNG cần AI.
+- Mỗi câu bắt đầu bằng dòng "###", sau đó (tuỳ chọn): Phần | Độ khó | Domain
+  Phần: RW hoặc Math. Độ khó: easy / medium / hard (hoặc Dễ / Trung bình / Khó).
+- "Passage:" là đoạn văn bên trái (có thể nhiều dòng). "Question:" là câu hỏi.
+- Các đáp án ghi dạng A) B) C) D). Câu Math tự điền (SPR) thì bỏ đáp án, ghi "Answer:" là được,
+  nhiều đáp án đúng cách nhau bằng dấu |  (ví dụ: Answer: 3/4 | 0.75).
+- Công thức toán viết giữa hai dấu $ ... $ (LaTeX). Bảng có thể viết dạng markdown | a | b |.
+- Dòng gạch chân: viết __từ__ để gạch chân, **từ** để in đậm.
+
+### RW | medium | Craft and Structure
+Passage: Urban planners in Copenhagen have spent decades redesigning streets to
+favor cyclists. Today, more than 60 percent of residents commute by bicycle, a
+change that planners attribute less to residents' attitudes than to the ______
+of safe, connected bike lanes.
+Question: Which choice completes the text with the most logical and precise word or phrase?
+A) scarcity
+B) availability
+C) cost
+D) appearance
+Answer: B
+Explanation: Thành công đến từ việc CÓ SẴN làn xe đạp an toàn → availability.
+
+### RW | hard | Standard English Conventions
+Passage: The committee, after reviewing dozens of proposals from local ______
+selected a design that incorporated recycled materials.
+Question: Which choice completes the text so that it conforms to the conventions of Standard English?
+A) artists,
+B) artists
+C) artists;
+D) artists—
+Answer: A
+Explanation: Cụm chen "after reviewing ... artists" mở bằng dấu phẩy nên phải đóng bằng dấu phẩy.
+
+### Math | easy | Algebra
+Question: If $5x - 4 = 21$, what is the value of $x$?
+A) 3
+B) 5
+C) 17
+D) 25
+Answer: B
+Explanation: $5x = 25 \Rightarrow x = 5$.
+
+### Math | hard | Advanced Math
+Question: If $x^2 - 6x + c = 0$ has exactly one real solution, what is the value of $c$?
+Answer: 9
+Explanation: $\Delta = 36 - 4c = 0 \Rightarrow c = 9$.

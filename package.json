@@ -1,0 +1,33 @@
+{
+  "name": "sat-practice",
+  "version": "1.0.0",
+  "description": "Web ôn thi SAT giao diện giống Bluebook, xào đề từ file tải lên, Module 2 luôn khó, có AI hỗ trợ",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguyenquangchau2805/Clau-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nguyenquangchau2805/Clau-/issues"
+  },
+  "homepage": "https://github.com/nguyenquangchau2805/Clau-#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "dompurify": "^3.1.6",
+    "express": "^5.3.0",
+    "katex": "^0.16.11",
+    "mammoth": "^1.13.0",
+    "marked": "^12.0.2",
+    "multer": "^2.5.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "type": "module"
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kết quả SAT</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23324dc7'/><text x='16' y='22' font-size='14' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>SAT</text></svg>" />
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
+  <script defer src="/vendor/katex/katex.min.js"></script>
+  <script defer src="/vendor/katex/contrib/auto-render.min.js"></script>
+  <script defer src="/vendor/marked/marked.min.js"></script>
+  <script defer src="/vendor/dompurify/purify.min.js"></script>
+  <link rel="stylesheet" href="/css/base.css" />
+  <style>
+    .score-big { font-size: 56px; font-weight: 800; line-height: 1; }
+    .score-sec b { font-size: 30px; }
+    .qitem { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; background: #fff; }
+    .qitem > summary { list-style: none; cursor: pointer; padding: 12px 14px; display: flex; gap: 12px; align-items: center; }
+    .qitem > summary::-webkit-details-marker { display: none; }
+    .qitem .res { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700; flex: none; }
+    .qitem .res.ok { background: var(--ok); }
+    .qitem .res.bad { background: var(--bad); }
+    .qitem .res.skip { background: #9aa1ad; }
+    .qbody { padding: 0 18px 16px; border-top: 1px solid #eee; font-family: Georgia, serif; font-size: 15.5px; }
+    .qbody .passage { background: #fafbfc; border-left: 3px solid #cfd6e4; padding: 8px 14px; margin: 12px 0; }
+    .opt { padding: 6px 10px; border-radius: 8px; border: 1px solid #e3e6ea; margin: 6px 0; display: flex; gap: 8px; align-items: baseline; }
+    .opt p, .notice p { margin: 0; display: inline; }
+    .opt.correct { border-color: var(--ok); background: #e7f6ec; }
+    .opt.wrong { border-color: var(--bad); background: #fdecea; }
+    .actions { font-family: Inter, system-ui, sans-serif; }
+    .filters button.on { background: var(--primary); color: #fff; border-color: var(--primary); }
+    table.qtable { border-collapse: collapse; margin: 8px 0; }
+    table.qtable th, table.qtable td { border: 1px solid #999; padding: 4px 8px; }
+  </style>
+</head>
+<body>
+  <header class="topnav">
+    <div class="brand"><div class="logo">SAT</div><span class="txt">SAT Practice</span></div>
+    <nav><a href="/#home">Luyện đề</a><a href="/#bank">Ngân hàng đề</a><a href="/#history">Lịch sử</a></nav>
+  </header>
+  <main class="container" id="root"><div class="empty">Đang tải…</div></main>
+  <script type="module" src="/js/result.js"></script>
+</body>
+</html>
