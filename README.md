@@ -29,7 +29,7 @@ Web luyện đề SAT với giao diện mô phỏng ứng dụng **Bluebook**. B
 - Vào Ngân hàng đề, bấm **Xem / sửa** ở câu cần hình. Chụp hình trong PDF (`Win + Shift + S`) rồi bấm **Ctrl + V** để dán, hoặc kéo thả hay chọn file ảnh. Khi thi, ảnh hiện ở đúng chỗ như trên Bluebook.
 - Trong file TXT: ghi dòng `Image: cau12.png` rồi chọn file ảnh **cùng lúc** với file .txt khi tải lên. Dòng `Figure: <mô tả>` ghi lại là câu này cần hình.
 - Câu có mô tả hình mà chưa gắn ảnh sẽ có nhãn **⚠ Thiếu hình**. Dùng bộ lọc "Thiếu hình" để tìm các câu còn phải dán ảnh.
-- Ảnh được lưu trong `data/images/`.
+- Ảnh được lưu trong thư mục dữ liệu, ở `images/`.
 
 **AI kiểm tra đáp án** (cho file có đáp án sai)
 - Bấm **🔍 AI kiểm tra đáp án** trong Ngân hàng đề, hoặc tick "Sau khi tải, cho AI giải lại…" lúc tải file lên.
@@ -64,7 +64,7 @@ npm start                   # mở http://localhost:3000
 
 Mới chạy lần đầu, vào **Ngân hàng đề → Nạp bộ câu mẫu** (55 câu) để thử ngay. Nếu không có API key, web vẫn chạy đầy đủ, chỉ tắt các tính năng AI.
 
-Dữ liệu (ngân hàng câu hỏi, bài thi, kết quả) được lưu trong `data/`.
+Dữ liệu (ngân hàng câu hỏi, ảnh, bài thi, kết quả) được **tự động lưu** ở thư mục riêng của máy: `C:\Users\<tên bạn>\SAT-Practice-data` trên Windows, `~/SAT-Practice-data` trên Mac. Thư mục này nằm ngoài thư mục code, nên tải bản code mới hay xoá thư mục code cũ đều **không mất đề**. Đường dẫn cũng hiện ở trang Ngân hàng đề. Mỗi lần lưu, web giữ thêm một bản sao lưu (`bank.backup.json`); nếu file chính bị hỏng, web tự khôi phục từ bản sao lưu này. Muốn đổi chỗ lưu thì đặt biến `DATA_DIR`.
 
 ## Định dạng JSON
 

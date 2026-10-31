@@ -19,6 +19,7 @@ async function loadStatus() {
   $("#cntRw").textContent = sum(c.rw);
   $("#cntMath").textContent = sum(c.math);
   $("#cntHard").textContent = c.rw.hard + c.math.hard;
+  if (status.dataDir) $("#dataDir").textContent = `💾 Tự động lưu tại: ${status.dataDir}`;
   const pill = $("#aiStatus");
   pill.textContent = status.aiEnabled ? "✨ AI đang bật" : "AI tắt (thiếu API key)";
   pill.classList.toggle("off", !status.aiEnabled);

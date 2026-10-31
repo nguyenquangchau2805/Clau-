@@ -7,7 +7,7 @@ import fs from "node:fs";
 import mammoth from "mammoth";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 
-import { questions, tests, results, IMAGE_DIR } from "./src/store.js";
+import { questions, tests, results, IMAGE_DIR, DATA_DIR } from "./src/store.js";
 import { normalizeQuestion, parseJson, parseStructuredText, publicQuestion, missingImage } from "./src/questions.js";
 import { buildTest, scoreTest, checkAnswer, FORMAT, BREAK_MINUTES } from "./src/testBuilder.js";
 import { aiEnabled, extractFromPdf, extractFromText, generateSimilar, tutorStream, verifyQuestion, mapLimit } from "./src/ai.js";
@@ -56,7 +56,7 @@ function counts() {
 }
 
 app.get("/api/status", (req, res) => {
-  res.json({ aiEnabled: aiEnabled(), counts: counts(), format: FORMAT, breakMinutes: BREAK_MINUTES });
+  res.json({ aiEnabled: aiEnabled(), counts: counts(), format: FORMAT, breakMinutes: BREAK_MINUTES, dataDir: DATA_DIR });
 });
 
 // ---------------- Ngân hàng câu hỏi ----------------
@@ -410,6 +410,7 @@ process.on("unhandledRejection", (err) => console.error("Lỗi không mong muố
 const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => {
   console.log(`SAT Practice đang chạy tại http://localhost:${PORT}`);
+  console.log(`Ngân hàng đề: ${questions.all().length} câu — lưu tại ${DATA_DIR}`);
   if (!aiEnabled()) console.log("⚠️  Chưa có ANTHROPIC_API_KEY: các tính năng AI sẽ tắt.");
   console.log("Đóng cửa sổ này (hoặc bấm Ctrl + C) để tắt web.");
   if (process.env.OPEN_BROWSER) {
