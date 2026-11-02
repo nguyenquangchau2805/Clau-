@@ -11,6 +11,7 @@ Web luyện đề SAT với giao diện mô phỏng ứng dụng **Bluebook**. B
 - Câu Math tự điền (SPR) có hướng dẫn bên trái và Answer Preview.
 - Bôi đen chữ để highlight (3 màu) và ghi chú.
 - Nghỉ 10 phút giữa hai phần, hết giờ thì tự chuyển module. Không quay lại được module đã làm.
+- Chế độ **hiện đáp án ngay** (tick khi tạo đề): chọn đáp án rồi bấm **Kiểm tra** (hoặc Enter) để xem đúng/sai và lời giải ngay. Đã kiểm tra thì đáp án bị khoá, và bảng điều hướng tô ô xanh cho câu đúng, ô đỏ cho câu sai.
 - Tiến độ được lưu tự động: tải lại trang vẫn làm tiếp được.
 - Phím tắt: A–D để chọn, Shift+A–D để gạch, ←/→ để chuyển câu, M để đánh dấu.
 

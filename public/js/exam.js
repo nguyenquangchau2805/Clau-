@@ -144,7 +144,8 @@ function renderIntro() {
     <h1>Practice Test</h1>
     <p class="lead">Đề gồm ${test.modules.length} module (${secs.map((s) => (s === "rw" ? "Reading and Writing" : "Math")).join(" + ")}). Module 2 của mỗi phần là <b>module khó</b>.
     ${test.timed ? "Thời gian được tính như thi thật; hết giờ sẽ tự chuyển module." : "Chế độ không giới hạn thời gian."}
-    ${test.aiHelp ? "<br>Chế độ luyện tập: có thể hỏi AI gợi ý trong lúc làm." : "<br>Chế độ thi thật: AI bị khoá đến khi nộp bài."}</p>
+    ${test.aiHelp ? "<br>Chế độ luyện tập: có thể hỏi AI gợi ý trong lúc làm." : "<br>Chế độ thi thật: AI bị khoá đến khi nộp bài."}
+    ${test.instant ? "<br><b>Hiện đáp án ngay:</b> chọn đáp án rồi bấm <b>Kiểm tra</b> để xem đúng/sai và lời giải. Đã kiểm tra thì không đổi đáp án được nữa." : ""}</p>
     ${test.warnings?.length ? `<div class="warnings">${test.warnings.map((w) => `<div>⚠️ ${esc(w)}</div>`).join("")}</div>` : ""}
     <div class="panel">
       <table class="list"><thead><tr><th>Module</th><th>Số câu</th><th>Thời gian</th></tr></thead><tbody>
@@ -218,6 +219,7 @@ function gridCells(currentIdx) {
     .questions.map((q, i) => {
       const cls = ["qcell"];
       if (S.answers[q.id]) cls.push("answered");
+      if (checked(q)) cls.push(checked(q).correct ? "right" : "wrong");
       if (S.marked[q.id]) cls.push("marked");
       if (i === currentIdx) cls.push("current");
       return `<button class="${cls.join(" ")}" data-goto="${i}">${i + 1}</button>`;
@@ -229,7 +231,7 @@ function navPopup() {
   if (!navOpen || S.phase !== "question") return "";
   return `<div class="navpop">
     <h3>${esc(mod().title)} Questions</h3>
-    <div class="legend"><span>📍 Current</span><span><i class="box"></i> Unanswered</span><span>🔖 For Review</span></div>
+    <div class="legend"><span>📍 Current</span><span><i class="box"></i> Unanswered</span><span>🔖 For Review</span>${test.instant ? `<span><i class="box" style="background:#1d7f45;border-color:#1d7f45"></i> Đúng</span><span><i class="box" style="background:#c0392b;border-color:#c0392b"></i> Sai</span>` : ""}</div>
     <div class="qgrid">${gridCells(S.idx)}</div>
     <button class="bb-btn outline go-review" data-act="review">Go to Review Page</button></div>`;
 }
@@ -255,13 +257,43 @@ function figureHtml(q) {
   return "";
 }
 
+// Chế độ "hiện đáp án ngay": kết quả kiểm tra của câu (null nếu chưa kiểm tra).
+function checked(q) {
+  return test.instant ? S.checked?.[q.id] ?? null : null;
+}
+
+function feedbackHtml(q) {
+  if (!test.instant) return "";
+  const chk = checked(q);
+  if (!chk) return `<button class="bb-btn check-btn" data-act="check" ${S.answers[q.id] ? "" : "disabled"}>Kiểm tra</button>`;
+  const right = q.type === "spr" ? chk.answer.split("|").join(" hoặc ") : chk.answer;
+  return `<div class="feedback ${chk.correct ? "ok" : "bad"}">
+      <div class="fb-head">${chk.correct ? "✓ Chính xác!" : `✗ Chưa đúng. Đáp án đúng: <b>${esc(right)}</b>`}</div>
+      ${chk.explanation ? `<div class="fb-expl">${rich(chk.explanation)}</div>` : ""}
+    </div>`;
+}
+
+async function checkCurrent() {
+  const q = question();
+  if (checked(q) || !S.answers[q.id]) return;
+  try {
+    const res = await api(`/api/tests/${testId}/check`, { method: "POST", body: { questionId: q.id, given: S.answers[q.id] } });
+    S.checked = { ...(S.checked || {}), [q.id]: res };
+    save();
+    renderExam();
+  } catch (err) {
+    toast(err.message);
+  }
+}
+
 function questionPanel(q) {
   const crossed = S.crossed[q.id] || [];
-  const elim = S.elimOn;
+  const chk = checked(q);
+  const elim = S.elimOn && !chk;
   const selected = S.answers[q.id];
   let body;
   if (q.type === "spr") {
-    body = `<div class="field"><input class="spr-input" id="sprInput" maxlength="6" autocomplete="off" value="${esc(selected || "")}" /></div>
+    body = `<div class="field"><input class="spr-input ${chk ? (chk.correct ? "is-right" : "is-wrong") : ""}" id="sprInput" maxlength="6" autocomplete="off" value="${esc(selected || "")}" ${chk ? "readonly" : ""} /></div>
       <div class="spr-preview">Answer Preview: <b id="sprPreview"></b></div>`;
   } else {
     body = `<div class="choices">${q.choices
@@ -269,7 +301,7 @@ function questionPanel(q) {
         const L = LETTERS[i];
         const isX = crossed.includes(L);
         return `<div class="choice-row">
-          <button class="choice ${selected === L ? "selected" : ""} ${isX ? "crossed" : ""}" data-choice="${L}">
+          <button class="choice ${selected === L ? "selected" : ""} ${isX ? "crossed" : ""} ${chk && L === chk.answer ? "is-right" : ""} ${chk && L === selected && !chk.correct ? "is-wrong" : ""}" data-choice="${L}" ${chk ? "disabled" : ""}>
             <span class="letter">${L}</span><span class="choice-text">${rich(c)}</span></button>
           ${elim ? (isX ? `<button class="undo" data-undo="${L}">Undo</button>` : `<button class="cross" data-cross="${L}" title="Cross out ${L}">${L}</button>`) : ""}
         </div>`;
@@ -279,11 +311,12 @@ function questionPanel(q) {
   const hl = S.hl[q.id] || {};
   return `<div class="qbar"><div class="qnum">${S.idx + 1}</div>
       <button class="mark-btn ${S.marked[q.id] ? "on" : ""}" data-act="mark"><span class="flag">🔖</span> Mark for Review</button>
-      ${q.type === "mcq" ? `<button class="elim-btn ${elim ? "on" : ""}" data-act="elim" title="Answer eliminator">ABC</button>` : ""}
+      ${q.type === "mcq" && !chk ? `<button class="elim-btn ${elim ? "on" : ""}" data-act="elim" title="Answer eliminator">ABC</button>` : ""}
     </div>
     ${mod().section === "math" ? figureHtml(q) : ""}
     <div class="qprompt hl-area" data-hl="prompt">${hl.prompt ?? rich(q.prompt)}</div>
-    ${body}`;
+    ${body}
+    ${feedbackHtml(q)}`;
 }
 
 function renderExam() {
@@ -333,6 +366,8 @@ function renderExam() {
       S.answers[question().id] = spr.value.trim();
       save();
       upd();
+      const btn = $('[data-act="check"]');
+      if (btn) btn.disabled = !spr.value.trim();
     });
     upd();
   }
@@ -379,7 +414,7 @@ function go(idx) {
 
 function selectChoice(L) {
   const q = question();
-  if (S.answers[q.id] === L) return;
+  if (S.answers[q.id] === L || checked(q)) return;
   S.answers[q.id] = L;
   // chọn một đáp án đã gạch thì bỏ gạch
   if (S.crossed[q.id]) S.crossed[q.id] = S.crossed[q.id].filter((x) => x !== L);
@@ -399,6 +434,7 @@ app.addEventListener("click", (e) => {
   }
   const q = S.phase === "question" ? question() : null;
   if (t.dataset.choice) return selectChoice(t.dataset.choice);
+  if ((t.dataset.cross || t.dataset.undo) && checked(q)) return;
   if (t.dataset.cross) {
     const L = t.dataset.cross;
     S.crossed[q.id] = [...new Set([...(S.crossed[q.id] || []), L])];
@@ -437,6 +473,8 @@ app.addEventListener("click", (e) => {
       S.marked[q.id] = !S.marked[q.id];
       save();
       return renderExam();
+    case "check":
+      return checkCurrent();
     case "elim":
       S.elimOn = !S.elimOn;
       save();
@@ -488,9 +526,14 @@ function showMore(btn) {
 }
 
 document.addEventListener("keydown", (e) => {
+  if (S?.phase === "question" && e.key === "Enter" && test.instant && !e.target.matches("textarea, button")) {
+    e.preventDefault();
+    return checkCurrent();
+  }
   if (S?.phase !== "question" || e.target.matches("input, textarea") || e.metaKey || e.ctrlKey || e.altKey) return;
   const q = question();
   const k = e.key.toUpperCase();
+  if (checked(q) && LETTERS.includes(k)) return;
   if (q.type === "mcq" && LETTERS.includes(k) && LETTERS.indexOf(k) < q.choices.length) {
     if (e.shiftKey) {
       S.crossed[q.id] = [...new Set([...(S.crossed[q.id] || []), k])];
@@ -723,7 +766,7 @@ try {
   app.innerHTML = `<div class="screen"><h1>Không tải được bài thi</h1><p class="lead">${esc(err.message)}</p><a class="bb-btn" href="/">Về trang chủ</a></div>`;
   throw err;
 }
-S = loadState() || { phase: "intro", mod: 0, idx: 0, remaining: 0, answers: {}, marked: {}, crossed: {}, hl: {}, timeSpent: {}, elimOn: false };
+S = loadState() || { phase: "intro", mod: 0, idx: 0, remaining: 0, answers: {}, marked: {}, crossed: {}, hl: {}, timeSpent: {}, elimOn: false, checked: {} };
 render();
 
 if (test.aiHelp) {

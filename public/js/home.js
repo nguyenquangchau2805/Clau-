@@ -59,7 +59,7 @@ $("#btnStart").onclick = async () => {
   try {
     const test = await api("/api/tests", {
       method: "POST",
-      body: { sections, perModule, timed: $("#optTimed").checked, shuffleChoices: $("#optShuffle").checked, aiHelp: $("#optAi").checked },
+      body: { sections, perModule, timed: $("#optTimed").checked, shuffleChoices: $("#optShuffle").checked, aiHelp: $("#optAi").checked, instant: $("#optInstant").checked },
     });
     location.href = `/exam.html?id=${test.id}`;
   } catch (err) {

@@ -284,7 +284,7 @@ app.get("/api/jobs/:id", (req, res) => {
 
 // ---------------- Bài thi ----------------
 app.post("/api/tests", (req, res) => {
-  const { sections = ["rw", "math"], perModule = {}, shuffleChoices = true, timed = true, aiHelp = false, name = "" } = req.body || {};
+  const { sections = ["rw", "math"], perModule = {}, shuffleChoices = true, timed = true, aiHelp = false, instant = false, name = "" } = req.body || {};
   const usage = {};
   for (const t of tests.all()) for (const m of t.modules) for (const q of m.questions) usage[q.id] = (usage[q.id] ?? 0) + 1;
   const { modules, warnings } = buildTest(questions.all(), {
@@ -294,7 +294,7 @@ app.post("/api/tests", (req, res) => {
     usage,
   });
   if (!modules.length) return res.status(400).json({ error: warnings.join(" ") || "Ngân hàng đề trống." });
-  const test = { id: newId("t"), createdAt: new Date().toISOString(), timed, aiHelp, name, modules, warnings };
+  const test = { id: newId("t"), createdAt: new Date().toISOString(), timed, aiHelp, instant: Boolean(instant), name, modules, warnings };
   tests.upsertMany([test]);
   res.json(publicTest(test));
 });
@@ -307,6 +307,17 @@ app.get("/api/tests/:id", (req, res) => {
   const t = tests.get(req.params.id);
   if (!t) return res.status(404).json({ error: "Không tìm thấy bài thi." });
   res.json(publicTest(t));
+});
+
+// Chế độ "hiện đáp án ngay": trả đáp án và lời giải của MỘT câu sau khi học sinh đã chọn đáp án.
+app.post("/api/tests/:id/check", (req, res) => {
+  const t = tests.get(req.params.id);
+  if (!t) return res.status(404).json({ error: "Không tìm thấy bài thi." });
+  if (!t.instant) return res.status(403).json({ error: "Bài này không bật chế độ hiện đáp án ngay." });
+  const q = t.modules.flatMap((m) => m.questions).find((x) => x.id === req.body?.questionId);
+  if (!q) return res.status(404).json({ error: "Không tìm thấy câu hỏi." });
+  const given = String(req.body.given ?? "");
+  res.json({ answer: q.answer, explanation: q.explanation, correct: checkAnswer(q, given), given });
 });
 
 app.post("/api/tests/:id/submit", (req, res) => {
