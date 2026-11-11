@@ -9,8 +9,10 @@ const bank = parseJson(fs.readFileSync("public/sample/sample-bank.json", "utf8")
 
 test("math is pre-rendered, including escaped dollar signs", () => {
   const html = richMath("costs $\\$40$ and $x^2 < 3$");
-  assert.match(html, /class="katex"/);
-  assert.ok(!html.includes("$"), html);
+  assert.equal((html.match(/class="katex"/g) || []).length, 2);
+  const text = html.replace(/<[^>]+>/g, "");
+  assert.ok(text.includes("costs $40"), text);
+  assert.ok(!text.includes("$x") && !text.includes("\\$"), text);
 });
 
 test("phone export is a single self-contained file", () => {
