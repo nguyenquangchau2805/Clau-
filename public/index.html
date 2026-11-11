@@ -62,6 +62,8 @@
         <label class="check"><input type="checkbox" id="optAi" /> Chế độ luyện tập: cho phép hỏi AI gợi ý trong lúc làm</label>
         <div id="startMsg"></div>
         <button class="btn primary" id="btnStart" style="width:100%;padding:12px">Bắt đầu làm bài →</button>
+        <button class="btn" id="btnExport" style="width:100%;padding:10px;margin-top:10px">📱 Xuất đề cho điện thoại (file .html)</button>
+        <p class="muted" style="font-size:12.5px;margin:6px 0 0">Xào một đề theo cấu hình trên rồi tải về 1 file. Gửi file qua Drive/Zalo/cáp sang điện thoại, mở bằng Chrome (Android) hoặc Safari (iPhone) để làm bài, không cần mạng.</p>
       </section>
     </div>
 
@@ -186,7 +188,10 @@ Answer: 5</pre>
   <!-- ============ LỊCH SỬ ============ -->
   <main class="container hidden" id="view-history">
     <section class="card">
-      <h2>Lịch sử làm bài</h2>
+      <div class="row between" style="margin-bottom:10px"><h2 style="margin:0">Lịch sử làm bài</h2>
+        <button class="btn small" id="btnImport">📥 Nhập kết quả từ điện thoại</button>
+        <input type="file" id="importInput" accept=".json,application/json" multiple hidden /></div>
+      <div id="importMsg"></div>
       <div id="historyList"></div>
     </section>
   </main>

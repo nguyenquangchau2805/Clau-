@@ -48,19 +48,43 @@ const getSections = segment("#segSections");
 const getLength = segment("#segLength");
 $("#segLength").addEventListener("change", () => $("#customCount").classList.toggle("hidden", getLength() !== "custom"));
 
-$("#btnStart").onclick = async () => {
+function testConfig() {
   const sec = getSections();
   const sections = sec === "full" ? ["rw", "math"] : [sec];
   const len = getLength();
   const n = len === "short" ? 10 : len === "custom" ? Number($("#customCount").value) : null;
   const perModule = n ? { rw: n, math: n } : {};
+  return { sections, perModule, timed: $("#optTimed").checked, shuffleChoices: $("#optShuffle").checked, aiHelp: $("#optAi").checked, instant: $("#optInstant").checked };
+}
+
+$("#btnExport").onclick = async () => {
+  const btn = $("#btnExport");
+  btn.disabled = true;
+  $("#startMsg").innerHTML = `<div class="notice">Đang xào đề và đóng gói…</div>`;
+  try {
+    const res = await fetch("/api/export", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(testConfig()) });
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `Lỗi ${res.status}`);
+    const name = (res.headers.get("Content-Disposition") || "").match(/filename="([^"]+)"/)?.[1] || "de-SAT.html";
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.append(a);
+    a.click();
+    setTimeout(() => (URL.revokeObjectURL(a.href), a.remove()), 2000);
+    $("#startMsg").innerHTML = `<div class="notice ok">✓ Đã tải về <b>${esc(name)}</b> (${Math.max(1, Math.round(blob.size / 1024))} KB). Gửi file này sang điện thoại rồi mở bằng Chrome/Safari.</div>`;
+  } catch (err) {
+    const msg = err instanceof TypeError ? "Không kết nối được tới server. Kiểm tra cửa sổ đen còn mở không." : err.message;
+    $("#startMsg").innerHTML = `<div class="notice err">${esc(msg)}</div>`;
+  }
+  btn.disabled = false;
+};
+
+$("#btnStart").onclick = async () => {
   const btn = $("#btnStart");
   btn.disabled = true;
   try {
-    const test = await api("/api/tests", {
-      method: "POST",
-      body: { sections, perModule, timed: $("#optTimed").checked, shuffleChoices: $("#optShuffle").checked, aiHelp: $("#optAi").checked, instant: $("#optInstant").checked },
-    });
+    const test = await api("/api/tests", { method: "POST", body: testConfig() });
     location.href = `/exam.html?id=${test.id}`;
   } catch (err) {
     $("#startMsg").innerHTML = `<div class="notice err">${esc(err.message)} <a href="#bank">Tải đề lên</a></div>`;
@@ -454,6 +478,29 @@ function editModal(q) {
 }
 
 // ---------------- Lịch sử ----------------
+// Kết quả làm trên điện thoại (file ket-qua-SAT-....json) -> chấm lại trên server và đưa vào lịch sử.
+$("#btnImport").onclick = () => $("#importInput").click();
+$("#importInput").onchange = async (e) => {
+  const msgs = [];
+  for (const file of e.target.files) {
+    try {
+      const data = JSON.parse(await file.text());
+      if (data.type !== "sat-phone-result" || !data.testId) throw new Error("không phải file kết quả xuất từ điện thoại");
+      await api(`/api/tests/${data.testId}/submit`, {
+        method: "POST",
+        body: { answers: data.answers || {}, marked: data.marked || [], timeSpent: data.timeSpent || {} },
+      });
+      msgs.push(`<div class="notice ok">✓ ${esc(file.name)}: đã thêm vào lịch sử.</div>`);
+    } catch (err) {
+      const why = /Không tìm thấy bài thi/.test(err.message) ? "đề này không được xuất từ web trên máy này" : err.message;
+      msgs.push(`<div class="notice err">${esc(file.name)}: ${esc(why)}.</div>`);
+    }
+  }
+  e.target.value = "";
+  $("#importMsg").innerHTML = msgs.join("");
+  loadHistory();
+};
+
 async function loadHistory() {
   const list = await api("/api/results");
   const el = $("#historyList");

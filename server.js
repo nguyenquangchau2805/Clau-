@@ -10,6 +10,7 @@ import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import { questions, tests, results, IMAGE_DIR, DATA_DIR } from "./src/store.js";
 import { normalizeQuestion, parseJson, parseStructuredText, publicQuestion, missingImage } from "./src/questions.js";
 import { buildTest, scoreTest, checkAnswer, FORMAT, BREAK_MINUTES } from "./src/testBuilder.js";
+import { buildPhoneHtml } from "./src/exportTest.js";
 import { aiEnabled, extractFromPdf, extractFromText, generateSimilar, tutorStream, verifyQuestion, mapLimit } from "./src/ai.js";
 
 // Tự đọc API key từ file .env (nếu có) để không phải gõ lệnh mỗi lần chạy.
@@ -283,8 +284,8 @@ app.get("/api/jobs/:id", (req, res) => {
 });
 
 // ---------------- Bài thi ----------------
-app.post("/api/tests", (req, res) => {
-  const { sections = ["rw", "math"], perModule = {}, shuffleChoices = true, timed = true, aiHelp = false, instant = false, name = "" } = req.body || {};
+function createTest(body = {}) {
+  const { sections = ["rw", "math"], perModule = {}, shuffleChoices = true, timed = true, aiHelp = false, instant = false, name = "" } = body;
   const usage = {};
   for (const t of tests.all()) for (const m of t.modules) for (const q of m.questions) usage[q.id] = (usage[q.id] ?? 0) + 1;
   const { modules, warnings } = buildTest(questions.all(), {
@@ -293,10 +294,34 @@ app.post("/api/tests", (req, res) => {
     shuffleAnswerChoices: shuffleChoices,
     usage,
   });
-  if (!modules.length) return res.status(400).json({ error: warnings.join(" ") || "Ngân hàng đề trống." });
+  if (!modules.length) throw Object.assign(new Error(warnings.join(" ") || "Ngân hàng đề trống."), { status: 400 });
   const test = { id: newId("t"), createdAt: new Date().toISOString(), timed, aiHelp, instant: Boolean(instant), name, modules, warnings };
   tests.upsertMany([test]);
-  res.json(publicTest(test));
+  return test;
+}
+
+app.post("/api/tests", (req, res) => {
+  try {
+    res.json(publicTest(createTest(req.body)));
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
+// Xuất một đề mới thành file .html làm được trên điện thoại (không cần server, không cần mạng).
+app.post("/api/export", (req, res) => {
+  let test;
+  try {
+    test = createTest({ ...req.body, aiHelp: false, exported: true });
+  } catch (err) {
+    return res.status(err.status || 500).json({ error: err.message });
+  }
+  const d = new Date(test.createdAt);
+  const stamp = `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getHours()).padStart(2, "0")}h${String(d.getMinutes()).padStart(2, "0")}`;
+  const parts = [...new Set(test.modules.map((m) => (m.section === "rw" ? "RW" : "Math")))].join("-");
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader("Content-Disposition", `attachment; filename="SAT-${parts}-${stamp}.html"`);
+  res.send(buildPhoneHtml({ ...test, breakSeconds: BREAK_MINUTES * 60 }));
 });
 
 function publicTest(t) {

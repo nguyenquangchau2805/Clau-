@@ -137,7 +137,7 @@ export function buildTest(bank, opts = {}) {
 }
 
 // --------------- Chấm điểm (ước tính) ---------------
-const WEIGHT = { easy: 1, medium: 1.4, hard: 1.9 };
+export const WEIGHT = { easy: 1, medium: 1.4, hard: 1.9 };
 
 export function checkAnswer(q, given) {
   if (given == null || given === "") return false;

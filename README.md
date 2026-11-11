@@ -26,6 +26,13 @@ Web luyện đề SAT với giao diện mô phỏng ứng dụng **Bluebook**. B
 - Nếu bật AI: Claude đọc PDF bất kỳ (cả bản scan, có công thức hay bảng), tự nhận diện phần, độ khó và domain, rồi lấy đáp án từ answer key trong file. Nếu file không có đáp án thì AI tự giải và câu đó được gắn nhãn "AI".
 - Trong ngân hàng đề bạn có thể xem, sửa và xoá câu, lọc theo nguồn, hoặc xuất ra JSON.
 
+**Làm bài trên điện thoại (không cần mạng)**
+- Ở trang Luyện đề, chọn cấu hình rồi bấm **📱 Xuất đề cho điện thoại**. Web xào một đề mới và tải về **1 file `.html`** chứa đủ câu hỏi, ảnh, công thức và đáp án.
+- Gửi file sang điện thoại (qua Drive, Zalo, cáp…), **tải file về máy** rồi mở bằng **Chrome** (Android) hoặc **Safari** (iPhone). Đừng mở bằng phần xem trước của Drive/Zalo vì ở đó bài không chạy.
+- Có đồng hồ, đánh dấu câu, gạch đáp án, bảng câu hỏi, chế độ hiện đáp án ngay. Làm xong có điểm và xem lại từng câu kèm lời giải. Thoát ra mở lại file vẫn làm tiếp được.
+- Muốn đưa kết quả về máy tính: bấm **Tải file kết quả** trên điện thoại, gửi file `.json` đó sang máy tính, rồi vào **Lịch sử → 📥 Nhập kết quả từ điện thoại**.
+- Bản trên điện thoại không có AI và không có máy tính Desmos.
+
 **Câu có hình / đồ thị**
 - Vào Ngân hàng đề, bấm **Xem / sửa** ở câu cần hình. Chụp hình trong PDF (`Win + Shift + S`) rồi bấm **Ctrl + V** để dán, hoặc kéo thả hay chọn file ảnh. Khi thi, ảnh hiện ở đúng chỗ như trên Bluebook.
 - Trong file TXT: ghi dòng `Image: cau12.png` rồi chọn file ảnh **cùng lúc** với file .txt khi tải lên. Dòng `Figure: <mô tả>` ghi lại là câu này cần hình.
